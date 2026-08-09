@@ -1,0 +1,32 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* CodeMirror 填满卡片主体 */
+.md-editor {
+  flex: 1;
+  min-height: 0;
+}
+
+.md-editor .cm-editor {
+  height: 100%;
+}
+
+.md-editor .cm-scroller {
+  overflow: auto;
+}
+
+.md-editor-readonly .cm-cursor {
+  display: none !important;
+}
