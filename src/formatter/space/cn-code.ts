@@ -1,26 +1,31 @@
-import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
+import { insertBeforeIf, insertAfterIf } from "./utils";
 import { isCJK, getFirstChar, getLastChar } from "../utils";
 
 export function cnCode(tree: Root) {
-  visit(tree, (node, index, parent) => {
-    if (!parent || index === undefined) return;
+  insertBeforeIf(
+    tree,
+    (node, index, parent) => {
+      if (!parent || index === undefined) return false;
+      if (node.type !== "inlineCode") return false;
 
-    if (node.type !== "inlineCode") return;
-    let insertSpaceBefore = false;
-    let insertSpaceAfter = false;
+      const prevNode = parent.children[index - 1];
+      const prevChar = getLastChar(prevNode);
+      return prevChar !== undefined && isCJK(prevChar);
+    },
+    " ",
+  );
 
-    const prevNode = parent.children[index - 1];
-    const prevChar = getLastChar(prevNode);
-    if (prevChar && isCJK(prevChar)) insertSpaceBefore = true;
+  insertAfterIf(
+    tree,
+    (node, index, parent) => {
+      if (!parent || index === undefined) return false;
+      if (node.type !== "inlineCode") return false;
 
-    const nextNode = parent.children[index + 1];
-    const nextChar = getFirstChar(nextNode);
-    if (nextChar && isCJK(nextChar)) insertSpaceAfter = true;
-
-    if (insertSpaceAfter)
-      parent.children.splice(index + 1, 0, { type: "text", value: " " });
-    if (insertSpaceBefore)
-      parent.children.splice(index, 0, { type: "text", value: " " });
-  });
+      const nextNode = parent.children[index + 1];
+      const nextChar = getFirstChar(nextNode);
+      return nextChar !== undefined && isCJK(nextChar);
+    },
+    " ",
+  );
 }
