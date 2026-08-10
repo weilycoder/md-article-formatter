@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'r
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from '@codemirror/theme-one-dark';
+import { EditorView } from "@codemirror/view";
 import {
   App as AntApp,
   Button,
@@ -175,7 +176,7 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
             className="md-editor"
             value={inputText}
             onChange={setInputText}
-            extensions={[markdown(), ...darkExtensions]}
+            extensions={[markdown(), EditorView.lineWrapping, ...darkExtensions]}
             theme={isDark ? 'dark' : 'light'}
             basicSetup={{
               lineNumbers: true,
@@ -226,7 +227,7 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
           <CodeMirror
             className="md-editor md-editor-readonly"
             value={formattedText}
-            extensions={[markdown(), ...darkExtensions]}
+            extensions={[markdown(), EditorView.lineWrapping, ...darkExtensions]}
             theme={isDark ? 'dark' : 'light'}
             editable={false}
             basicSetup={{
