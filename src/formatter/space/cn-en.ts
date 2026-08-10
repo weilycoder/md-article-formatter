@@ -1,7 +1,7 @@
-import type { Root, Literal } from "mdast";
+import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 
-import { isCJK, isLatin, getLastChar } from "../utils";
+import { isCJK, isLatin, getLastChar, getFirstChar } from "../utils";
 import { insertBeforeIf } from "./utils";
 
 function addCnEnSpace(line: string): string {
@@ -27,13 +27,19 @@ export function cnEn(tree: Root) {
     tree,
     (node, index, parent) => {
       if (!parent || index === undefined) return false;
-      const currValue = (node as Literal)?.value;
-      if (typeof currValue !== "string") return false;
-      if (currValue.length === 0) return false;
-      const currChar = currValue[0];
-      const prevNode = parent.children[index - 1];
-      const prevChar = getLastChar(prevNode);
+      if (
+        node.type !== "text" &&
+        node.type !== "strong" &&
+        node.type !== "emphasis"
+      )
+        return false;
+
+      const currChar = getFirstChar(node);
+      if (currChar === undefined) return false;
+
+      const prevChar = getLastChar(parent.children[index - 1]);
       if (prevChar === undefined) return false;
+
       return (
         (isCJK(prevChar) && isLatin(currChar)) ||
         (isLatin(prevChar) && isCJK(currChar))
