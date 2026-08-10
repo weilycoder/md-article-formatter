@@ -14,6 +14,8 @@ interface ConfigItem {
 
 const configItems: ConfigItem[] = [
   { key: 'cnEnSpace', label: '中英文空格', description: '中英文之间自动添加空格' },
+  { key: 'cnMathSpace', label: '中文与行内公式空格', description: '中文与行内公式之间自动添加空格' },
+  { key: 'cnCodeSpace', label: '中文与行内代码空格', description: '中文与行内代码之间自动添加空格' },
 ];
 
 export const ConfigPanel = ({ options, onChange }: ConfigPanelProps) => {

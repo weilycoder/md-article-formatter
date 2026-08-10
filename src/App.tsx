@@ -32,14 +32,9 @@ import initialText from './demo.md?raw';
 const { Text, Title } = Typography;
 
 const defaultFormatOptions: FormatOptions = {
-  headingNormalize: true,
-  listUnify: true,
-  blankLineNormalize: true,
   cnEnSpace: true,
-  trailingSpaceClean: true,
-  codeBlockNormalize: true,
-  removeExtraBlankLines: true,
-  orderedListNormalize: true,
+  cnMathSpace: true,
+  cnCodeSpace: true
 };
 
 function getInitialTheme(): 'light' | 'dark' {

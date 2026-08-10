@@ -7,6 +7,8 @@ import type { Root } from "mdast";
 
 export interface FormatOptions {
   cnEnSpace: boolean;
+  cnMathSpace: boolean;
+  cnCodeSpace: boolean;
 }
 
 function isCJK(ch: string): boolean {
@@ -55,6 +57,36 @@ export function formatMarkdown(input: string, options: FormatOptions): string {
         if (options.cnEnSpace) {
           visit(tree, "text", (node) => {
             node.value = addCnEnSpace(node.value);
+          });
+        }
+
+        if (options.cnMathSpace || options.cnCodeSpace) {
+          visit(tree, (node, index, parent) => {
+            if (!parent || index === undefined) return;
+
+            const isMath = node.type === "inlineMath" && options.cnMathSpace;
+            const isCode = node.type === "inlineCode" && options.cnCodeSpace;
+            if (!isMath && !isCode) return;
+
+            const prev = parent.children[index - 1];
+            if (prev?.type === "text") {
+              const val = prev.value;
+              if (
+                val.length > 0 &&
+                isCJK(val[val.length - 1]) &&
+                val[val.length - 1] !== " "
+              ) {
+                prev.value = val + " ";
+              }
+            }
+
+            const next = parent.children[index + 1];
+            if (next?.type === "text") {
+              const val = next.value;
+              if (val.length > 0 && isCJK(val[0]) && val[0] !== " ") {
+                next.value = " " + val;
+              }
+            }
           });
         }
       };
