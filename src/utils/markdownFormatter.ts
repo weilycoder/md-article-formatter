@@ -9,6 +9,7 @@ export interface FormatOptions {
 }
 
 function isCJK(ch: string): boolean {
+  if (ch.length !== 1) throw new Error("Input must be a single character.");
   const code = ch.charCodeAt(0);
   return (
     (code >= 0x4e00 && code <= 0x9fff) || // 中文
@@ -20,6 +21,7 @@ function isCJK(ch: string): boolean {
 }
 
 function isLatin(ch: string): boolean {
+  if (ch.length !== 1) throw new Error("Input must be a single character.");
   const code = ch.charCodeAt(0);
   return (
     (code >= 0x41 && code <= 0x5a) || // A-Z
