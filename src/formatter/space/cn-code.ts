@@ -1,6 +1,12 @@
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
-import { isCJK } from "../utils";
+import {
+  isCJK,
+  getFirstChar,
+  getLastChar,
+  pushFrontChar,
+  pushBackChar,
+} from "../utils";
 
 export function cnCode(tree: Root) {
   visit(tree, (node, index, parent) => {
@@ -8,24 +14,12 @@ export function cnCode(tree: Root) {
 
     if (node.type !== "inlineCode") return;
 
-    const prev = parent.children[index - 1];
-    if (prev?.type === "text") {
-      const val = prev.value;
-      if (
-        val.length > 0 &&
-        isCJK(val[val.length - 1]) &&
-        val[val.length - 1] !== " "
-      ) {
-        prev.value = val + " ";
-      }
-    }
+    const prevNode = parent.children[index - 1];
+    const prevChar = getLastChar(prevNode);
+    if (prevChar && isCJK(prevChar)) pushBackChar(prevNode, " ");
 
-    const next = parent.children[index + 1];
-    if (next?.type === "text") {
-      const val = next.value;
-      if (val.length > 0 && isCJK(val[0]) && val[0] !== " ") {
-        next.value = " " + val;
-      }
-    }
+    const nextNode = parent.children[index + 1];
+    const nextChar = getFirstChar(nextNode);
+    if (nextChar && isCJK(nextChar)) pushFrontChar(nextNode, " ");
   });
 }
