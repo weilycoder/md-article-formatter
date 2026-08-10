@@ -7,15 +7,10 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": [
-    "dist",
-    "node_modules",
-  ],
+  "ignorePatterns": ["dist", "node_modules"],
   "overrides": [
     {
-      "files": [
-        "**/*.{ts,tsx}"
-      ],
+      "files": ["**/*.{ts,tsx}"],
       "rules": {
         "constructor-super": "error",
         "for-direction": "error",
@@ -105,10 +100,7 @@
           }
         ]
       },
-      "plugins": [
-        "typescript",
-        "react"
-      ],
+      "plugins": ["typescript", "react"],
       "env": {
         "browser": true
       }

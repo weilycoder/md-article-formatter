@@ -1,5 +1,5 @@
-import { visit } from "unist-util-visit";
 import type { Root, Node, Parent } from "mdast";
+import { visit } from "unist-util-visit";
 
 export function insertBeforeIf(
   tree: Root,

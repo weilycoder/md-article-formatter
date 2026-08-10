@@ -1,5 +1,6 @@
-import { visit } from "unist-util-visit";
 import type { Root, Literal } from "mdast";
+import { visit } from "unist-util-visit";
+
 import { isCJK, isLatin, getLastChar } from "../utils";
 import { insertBeforeIf } from "./utils";
 

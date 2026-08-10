@@ -1,11 +1,12 @@
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkMath from "remark-math";
-import remarkStringify from "remark-stringify";
 import type { Root } from "mdast";
+import remarkMath from "remark-math";
+import remarkParse from "remark-parse";
+import remarkStringify from "remark-stringify";
+import { unified } from "unified";
+
 import { cnCode } from "./space/cn-code";
-import { cnMath } from "./space/cn-math";
 import { cnEn } from "./space/cn-en";
+import { cnMath } from "./space/cn-math";
 
 export interface FormatOptions {
   cnEnSpace: boolean;

@@ -1,6 +1,7 @@
 import type { Root } from "mdast";
-import { insertBeforeIf, insertAfterIf } from "./utils";
+
 import { isCJK, getFirstChar, getLastChar } from "../utils";
+import { insertBeforeIf, insertAfterIf } from "./utils";
 
 export function cnMath(tree: Root) {
   insertBeforeIf(
