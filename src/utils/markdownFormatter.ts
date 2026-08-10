@@ -1,5 +1,6 @@
 import { unified } from "unified";
 import remarkParse from "remark-parse";
+import remarkMath from "remark-math";
 import remarkStringify from "remark-stringify";
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
@@ -48,6 +49,7 @@ function addCnEnSpace(line: string): string {
 export function formatMarkdown(input: string, options: FormatOptions): string {
   const processor = unified()
     .use(remarkParse)
+    .use(remarkMath)
     .use(function myTransformer() {
       return (tree: Root) => {
         if (options.cnEnSpace) {
