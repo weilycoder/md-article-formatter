@@ -42,33 +42,3 @@ export function getLastChar(node: any): string | undefined {
     return getLastChar(children[children.length - 1]);
   return undefined;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function pushFrontChar(node: any, ch: string): void {
-  if (node === undefined) return;
-  const value = node?.value;
-  if (typeof value === "string") {
-    node.value = ch + value;
-    return;
-  }
-  const children = node?.children;
-  if (Array.isArray(children) && children.length > 0) {
-    pushFrontChar(children[0], ch);
-    return;
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function pushBackChar(node: any, ch: string): void {
-  if (node === undefined) return;
-  const value = node?.value;
-  if (typeof value === "string") {
-    node.value = value + ch;
-    return;
-  }
-  const children = node?.children;
-  if (Array.isArray(children) && children.length > 0) {
-    pushBackChar(children[children.length - 1], ch);
-    return;
-  }
-}
