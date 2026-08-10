@@ -25,7 +25,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import zhCN from 'antd/locale/zh_CN';
-import { formatMarkdown, type FormatOptions } from './utils/markdownFormatter';
+import { formatMarkdown, type FormatOptions } from './formatter/formatter';
 import { ConfigPanel } from './components/ConfigPanel';
 import initialText from './demo.md?raw';
 

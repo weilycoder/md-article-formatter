@@ -1,5 +1,5 @@
 import { Col, Collapse, Flex, Row, Switch, Typography, theme } from 'antd';
-import type { FormatOptions } from '../utils/markdownFormatter';
+import type { FormatOptions } from '../formatter/formatter';
 
 interface ConfigPanelProps {
   options: FormatOptions;
