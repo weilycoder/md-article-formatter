@@ -20,7 +20,7 @@ export function isLatin(ch: string): boolean {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export function getFirstChar(node: any): string | undefined {
   if (node === undefined) return undefined;
   const value = node?.value;
@@ -31,7 +31,7 @@ export function getFirstChar(node: any): string | undefined {
   return undefined;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export function getLastChar(node: any): string | undefined {
   if (node === undefined) return undefined;
   const value = node?.value;
