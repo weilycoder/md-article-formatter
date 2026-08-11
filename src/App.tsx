@@ -22,11 +22,11 @@ import { useState, type CSSProperties } from "react";
 import { AppHeader } from "./components/AppHeader";
 import { ConfigPanel } from "./components/ConfigPanel";
 import { EditorPanel } from "./components/EditorPanel";
+import { MergePanel } from "./components/MergePanel";
 import { TokenCounter } from "./components/TokenCounter";
 import { useEditorActions } from "./hooks/useEditorActions";
 import { useMarkdownFormatter } from "./hooks/useMarkdownFormatter";
 import { useThemeMode } from "./hooks/useThemeMode";
-import { MergePanel } from "./components/MergePanel";
 
 interface AppInnerProps {
   isDark: boolean;

@@ -9,6 +9,7 @@ import { cnPunctuation } from "./en-punctuation";
 import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
+import { cnPunc } from "./space/cn-punc";
 
 export interface MapEntry {
   enabled: boolean;
@@ -19,6 +20,7 @@ export interface FormatOptions {
   cnEnSpace: boolean;
   cnMathSpace: boolean;
   cnCodeSpace: boolean;
+  cnPuncSpace: boolean;
   enPunctuationReplace: boolean;
   enPunctuationReplaceMap: Record<string, MapEntry>;
   clangFormat: boolean;
@@ -28,6 +30,7 @@ export const defaultFormatOptions: FormatOptions = {
   cnEnSpace: true,
   cnMathSpace: true,
   cnCodeSpace: true,
+  cnPuncSpace: true,
   enPunctuationReplace: true,
   enPunctuationReplaceMap: {
     ",": { enabled: true, to: "，" },
@@ -56,6 +59,7 @@ export function formatMarkdown(input: string, options: FormatOptions): string {
         if (options.cnEnSpace) cnEn(tree);
         if (options.cnCodeSpace) cnCode(tree);
         if (options.cnMathSpace) cnMath(tree);
+        if (options.cnPuncSpace) cnPunc(tree);
         if (options.clangFormat) clangFormat(tree);
       };
     })

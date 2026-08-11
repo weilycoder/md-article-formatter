@@ -76,6 +76,12 @@ const configGroups: ConfigGroup[] = [
         label: "中文与行内代码空格",
         description: "中文与行内代码之间自动添加空格",
       },
+      {
+        kind: "switch",
+        key: "cnPuncSpace",
+        label: "中文标点空格",
+        description: "中文标点前后自动去除多余空格",
+      }
     ],
   },
   {

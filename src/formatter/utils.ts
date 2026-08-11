@@ -10,6 +10,15 @@ export function isCJK(ch: string): boolean {
   );
 }
 
+export function isCJKPunctuation(ch: string): boolean {
+  if (ch.length !== 1) throw new Error("Input must be a single character.");
+  const code = ch.charCodeAt(0);
+  return (
+    (code >= 0x3000 && code <= 0x303f) || // CJK 符号和标点
+    (code >= 0xff00 && code <= 0xffef) // 全角 ASCII 和全角标点
+  );
+}
+
 export function isLatin(ch: string): boolean {
   if (ch.length !== 1) throw new Error("Input must be a single character.");
   const code = ch.charCodeAt(0);
