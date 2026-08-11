@@ -1,4 +1,5 @@
-import { markdown } from "@codemirror/lang-markdown";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { languages } from "@codemirror/language-data";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { EditorView } from "@codemirror/view";
 import CodeMirror from "@uiw/react-codemirror";
@@ -51,7 +52,11 @@ export function EditorPanel({
         className={readOnly ? "md-editor md-editor-readonly" : "md-editor"}
         value={value}
         onChange={onChange}
-        extensions={[markdown(), EditorView.lineWrapping, ...darkExtensions]}
+        extensions={[
+          markdown({ base: markdownLanguage, codeLanguages: languages }),
+          EditorView.lineWrapping,
+          ...darkExtensions,
+        ]}
         theme={isDark ? "dark" : "light"}
         editable={!readOnly}
         basicSetup={{
