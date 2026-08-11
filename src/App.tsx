@@ -1,5 +1,6 @@
 import {
   CopyOutlined,
+  DiffOutlined,
   DownloadOutlined,
   SettingOutlined,
   UploadOutlined,
@@ -25,6 +26,7 @@ import { TokenCounter } from "./components/TokenCounter";
 import { useEditorActions } from "./hooks/useEditorActions";
 import { useMarkdownFormatter } from "./hooks/useMarkdownFormatter";
 import { useThemeMode } from "./hooks/useThemeMode";
+import { MergePanel } from "./components/MergePanel";
 
 interface AppInnerProps {
   isDark: boolean;
@@ -37,7 +39,9 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
   const screens = Grid.useBreakpoint();
   const isMobile = screens.lg === false;
 
-  const [viewMode, setViewMode] = useState<"edit" | "settings">("edit");
+  const [viewMode, setViewMode] = useState<"edit" | "diff" | "settings">(
+    "edit",
+  );
 
   const { inputText, setInputText, options, setOptions, formattedText } =
     useMarkdownFormatter();
@@ -110,6 +114,12 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
             footerLeft={<TokenCounter text={formattedText} />}
             footerRight={
               <Space>
+                <Button
+                  icon={<DiffOutlined />}
+                  onClick={() => setViewMode("diff")}
+                >
+                  对比差异
+                </Button>
                 <Button icon={<CopyOutlined />} onClick={handleCopy}>
                   复制
                 </Button>
@@ -123,6 +133,24 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
               </Space>
             }
           />
+        </Flex>
+      )}
+
+      {/* 差异对比面板 */}
+      {viewMode === "diff" && (
+        <Flex
+          style={{ flex: 1, minHeight: 0, padding: 16, overflow: "hidden" }}
+        >
+          <MergePanel
+            title="差异对比"
+            originalText={inputText}
+            modifiedText={formattedText}
+            isDark={isDark}
+            extra={
+              <Button onClick={() => setViewMode("edit")}>返回编辑</Button>
+            }
+            panelStyle={panelStyle}
+          ></MergePanel>
         </Flex>
       )}
 

@@ -22,6 +22,7 @@
     "@wasm-fmt/clang-format": "^22.1.8",
     "antd": "^6.5.4",
     "react": "^19.2.8",
+    "react-codemirror-merge": "^4.25.11",
     "react-dom": "^19.2.8",
     "remark": "^15.0.1",
     "remark-math": "^6.0.0",
