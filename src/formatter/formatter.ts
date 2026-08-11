@@ -45,7 +45,7 @@ export const defaultFormatOptions: FormatOptions = {
   clangFormat: false,
 };
 
-export function formatMarkdown(input: string, options: FormatOptions): string {
+function _formatMarkdown(input: string, options: FormatOptions): string {
   const processor = unified()
     .use(remarkParse)
     .use(remarkMath)
@@ -71,4 +71,23 @@ export function formatMarkdown(input: string, options: FormatOptions): string {
 
   const result = processor.processSync(input);
   return String(result);
+}
+
+export function formatMarkdown(
+  input: string,
+  options: FormatOptions,
+  maxIterations: number = 8,
+): string {
+  let lastResult = input;
+  let iteration = 0;
+  for (; iteration < maxIterations; iteration++) {
+    const newResult = _formatMarkdown(lastResult, options);
+    if (newResult === lastResult) break;
+    lastResult = newResult;
+  }
+  if (iteration === maxIterations)
+    console.warn(
+      `Warning: Maximum iterations (${maxIterations}) reached during formatting. The output may not be fully formatted.`,
+    );
+  return lastResult;
 }
