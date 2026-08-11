@@ -16,7 +16,7 @@ function replacePunctuation(
   let result = "";
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
-    if (!replaceMap.hasOwnProperty(ch)) result += ch;
+    if (!Object.prototype.hasOwnProperty.call(replaceMap, ch)) result += ch;
     else if (result.length > 0 && isCJK(result[result.length - 1]))
       result += replaceMap[ch];
     else if (i + 1 < text.length && isCJK(text[i + 1]))
@@ -40,14 +40,20 @@ export function cnPunctuation(tree: Root, replaceMap: Record<string, string>) {
       return;
 
     const currFChar = getFirstChar(node);
-    if (currFChar !== undefined && replaceMap.hasOwnProperty(currFChar)) {
+    if (
+      currFChar !== undefined &&
+      Object.prototype.hasOwnProperty.call(replaceMap, currFChar)
+    ) {
       const prevLChar = getLastChar(parent.children[index - 1]);
       if (prevLChar !== undefined && isCJK(prevLChar))
         setFirstChar(node, replaceMap[currFChar]);
     }
 
     const currLChar = getLastChar(node);
-    if (currLChar !== undefined && replaceMap.hasOwnProperty(currLChar)) {
+    if (
+      currLChar !== undefined &&
+      Object.prototype.hasOwnProperty.call(replaceMap, currLChar)
+    ) {
       const nextFChar = getFirstChar(parent.children[index + 1]);
       if (nextFChar !== undefined && isCJK(nextFChar))
         setLastChar(node, replaceMap[currLChar]);
