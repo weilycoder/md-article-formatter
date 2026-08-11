@@ -35,7 +35,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build
+        run: pnpm build --base=/${{ github.event.repository.name }}/
       - name: Upload artifact for deployment
 
         uses: actions/upload-pages-artifact@v3
