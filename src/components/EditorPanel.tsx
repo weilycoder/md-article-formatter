@@ -60,10 +60,7 @@ export function EditorPanel({
         theme={isDark ? "dark" : "light"}
         editable={!readOnly}
         basicSetup={{
-          lineNumbers: true,
-          foldGutter: true,
           highlightActiveLine: !readOnly,
-          bracketMatching: true,
           closeBrackets: !readOnly,
           indentOnInput: !readOnly,
           autocompletion: false,
