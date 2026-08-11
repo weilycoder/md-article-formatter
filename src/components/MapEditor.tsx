@@ -28,9 +28,8 @@ function toRows(value: Record<string, MapEntry>): MapRow[] {
 function toRecord(rows: MapRow[]): Record<string, MapEntry> {
   const record: Record<string, MapEntry> = {};
   for (const { from, enabled, to } of rows) {
-    const key = from.trim();
-    if (key === "" || to.trim() === "") continue;
-    record[key] = { enabled, to };
+    if (from === "" || to === "") continue;
+    record[from] = { enabled, to };
   }
   return record;
 }
@@ -46,9 +45,7 @@ export function MapEditor({
   useEffect(() => {
     setRows((prev) => {
       const committed = toRows(value);
-      const pending = prev.filter(
-        (row) => row.from.trim() === "" || row.to.trim() === "",
-      );
+      const pending = prev.filter((row) => row.from === "" || row.to === "");
       return [...committed, ...pending];
     });
   }, [value]);
