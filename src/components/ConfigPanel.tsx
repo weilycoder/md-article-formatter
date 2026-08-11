@@ -1,12 +1,13 @@
 import {
+  Card,
   Col,
-  Collapse,
   Divider,
   Flex,
   Row,
   Switch,
   Typography,
   theme,
+  type CardProps,
 } from "antd";
 
 import type { FormatOptions, MapEntry } from "../formatter/formatter";
@@ -15,6 +16,7 @@ import { MapEditor } from "./MapEditor";
 interface ConfigPanelProps {
   options: FormatOptions;
   onChange: (options: FormatOptions) => void;
+  extra?: CardProps["extra"];
 }
 
 type BooleanOptionKey = {
@@ -165,64 +167,53 @@ function MapItem({ item, options, onChange }: MapItemProps) {
   );
 }
 
-export const ConfigPanel = ({ options, onChange }: ConfigPanelProps) => {
+export const ConfigPanel = ({ options, onChange, extra }: ConfigPanelProps) => {
   const { token } = theme.useToken();
 
   return (
-    <Collapse
-      ghost
+    <Card
+      title="配置"
       style={{
         flexShrink: 0,
+        padding: 16,
         background: token.colorBgContainer,
         borderTop: `1px solid ${token.colorBorderSecondary}`,
       }}
-      items={[
-        {
-          key: "config",
-          label: "配置面板",
-          children: (
-            <Flex vertical gap={24}>
-              {configGroups.map((group) => (
-                <section key={group.id}>
-                  <Typography.Text strong style={{ fontSize: 13 }}>
-                    {group.title}
-                  </Typography.Text>
-                  <Divider style={{ margin: "8px 0 16px" }} />
-                  <Row gutter={[16, 16]}>
-                    {group.items.map((item) =>
-                      item.kind === "switch" ? (
-                        <Col
-                          key={item.key}
-                          xs={24}
-                          sm={24}
-                          md={12}
-                          lg={8}
-                          xl={6}
-                        >
-                          <SwitchItem
-                            item={item}
-                            options={options}
-                            onChange={onChange}
-                          />
-                        </Col>
-                      ) : (
-                        <Col key={item.key} span={24}>
-                          <MapItem
-                            item={item}
-                            options={options}
-                            onChange={onChange}
-                          />
-                        </Col>
-                      ),
-                    )}
-                  </Row>
-                </section>
-              ))}
-            </Flex>
-          ),
-        },
-      ]}
-    />
+      extra={extra}
+    >
+      <Flex vertical gap={24}>
+        {configGroups.map((group) => (
+          <section key={group.id}>
+            <Typography.Text strong style={{ fontSize: 13 }}>
+              {group.title}
+            </Typography.Text>
+            <Divider style={{ margin: "8px 0 16px" }} />
+            <Row gutter={[16, 16]}>
+              {group.items.map((item) =>
+                item.kind === "switch" ? (
+                  <Col key={item.key} xs={24} sm={24} md={12} lg={8} xl={6}>
+                    <SwitchItem
+                      item={item}
+                      options={options}
+                      onChange={onChange}
+                    />
+                  </Col>
+                ) : (
+                  <Col key={item.key} span={24}>
+                    <MapItem
+                      item={item}
+                      options={options}
+                      onChange={onChange}
+                    />
+                  </Col>
+                ),
+              )}
+            </Row>
+            <Divider style={{ margin: "16px 0 0" }} />
+          </section>
+        ))}
+      </Flex>
+    </Card>
   );
 };
 

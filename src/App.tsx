@@ -1,6 +1,7 @@
 import {
   CopyOutlined,
   DownloadOutlined,
+  SettingOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
 import {
@@ -15,7 +16,7 @@ import {
   theme as antdTheme,
 } from "antd";
 import zhCN from "antd/locale/zh_CN";
-import { type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 
 import { AppHeader } from "./components/AppHeader";
 import { ConfigPanel } from "./components/ConfigPanel";
@@ -35,6 +36,8 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
   const { token } = antdTheme.useToken();
   const screens = Grid.useBreakpoint();
   const isMobile = screens.lg === false;
+
+  const [viewMode, setViewMode] = useState<"edit" | "settings">("edit");
 
   const { inputText, setInputText, options, setOptions, formattedText } =
     useMarkdownFormatter();
@@ -63,58 +66,74 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
       <AppHeader isDark={isDark} onToggleTheme={onToggleTheme} />
 
       {/* 编辑器区域：宽屏左右两栏，窄屏上下堆叠 */}
-      <Flex
-        gap={16}
-        vertical={isMobile}
-        style={{ flex: 1, minHeight: 0, padding: 16, overflow: "hidden" }}
-      >
-        <EditorPanel
-          title="原始输入"
-          value={inputText}
-          onChange={setInputText}
-          isDark={isDark}
-          panelStyle={panelStyle}
-          footerStyle={footerStyle}
-          footerLeft={<TokenCounter text={inputText} />}
-          footerRight={
-            <Upload
-              accept=".md,.txt,.markdown,text/markdown,text/plain"
-              showUploadList={false}
-              beforeUpload={handleUpload}
-            >
-              <Button icon={<UploadOutlined />}>上传</Button>
-            </Upload>
-          }
-        />
+      {viewMode === "edit" && (
+        <Flex
+          gap={16}
+          vertical={isMobile}
+          style={{ flex: 1, minHeight: 0, padding: 16, overflow: "hidden" }}
+        >
+          <EditorPanel
+            title="原始输入"
+            value={inputText}
+            onChange={setInputText}
+            isDark={isDark}
+            panelStyle={panelStyle}
+            footerStyle={footerStyle}
+            footerLeft={<TokenCounter text={inputText} />}
+            footerRight={
+              <Space>
+                <Button
+                  icon={<SettingOutlined />}
+                  onClick={() => setViewMode("settings")}
+                >
+                  设置
+                </Button>
+                <Upload
+                  accept=".md,.txt,.markdown,text/markdown,text/plain"
+                  showUploadList={false}
+                  beforeUpload={handleUpload}
+                >
+                  <Button icon={<UploadOutlined />}>上传</Button>
+                </Upload>
+              </Space>
+            }
+          />
 
-        <EditorPanel
-          title="格式化后输出"
-          extra={<Tag>只读</Tag>}
-          value={formattedText}
-          isDark={isDark}
-          readOnly
-          panelStyle={panelStyle}
-          footerStyle={footerStyle}
-          footerLeft={<TokenCounter text={formattedText} />}
-          footerRight={
-            <Space>
-              <Button icon={<CopyOutlined />} onClick={handleCopy}>
-                复制
-              </Button>
-              <Button
-                type="primary"
-                icon={<DownloadOutlined />}
-                onClick={handleDownload}
-              >
-                下载 .md
-              </Button>
-            </Space>
-          }
-        />
-      </Flex>
+          <EditorPanel
+            title="格式化后输出"
+            extra={<Tag>只读</Tag>}
+            value={formattedText}
+            isDark={isDark}
+            readOnly
+            panelStyle={panelStyle}
+            footerStyle={footerStyle}
+            footerLeft={<TokenCounter text={formattedText} />}
+            footerRight={
+              <Space>
+                <Button icon={<CopyOutlined />} onClick={handleCopy}>
+                  复制
+                </Button>
+                <Button
+                  type="primary"
+                  icon={<DownloadOutlined />}
+                  onClick={handleDownload}
+                >
+                  下载 .md
+                </Button>
+              </Space>
+            }
+          />
+        </Flex>
+      )}
 
       {/* 底部配置面板 */}
-      <ConfigPanel options={options} onChange={setOptions} />
+      {viewMode === "settings" && (
+        <ConfigPanel
+          options={options}
+          onChange={setOptions}
+          extra={<Button onClick={() => setViewMode("edit")}>返回编辑</Button>}
+        />
+      )}
     </Flex>
   );
 }
