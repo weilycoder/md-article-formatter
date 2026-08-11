@@ -138,7 +138,6 @@ export const ConfigPanel = ({ options, onChange }: ConfigPanelProps) => {
   return (
     <Collapse
       ghost
-      defaultActiveKey={["config"]}
       style={{
         flexShrink: 0,
         background: token.colorBgContainer,
