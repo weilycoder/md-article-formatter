@@ -18,6 +18,7 @@
     "@codemirror/theme-one-dark": "^6.1.2",
     "@codemirror/view": "^6.43.8",
     "@uiw/react-codemirror": "^4.23.6",
+    "@wasm-fmt/clang-format": "^22.1.8",
     "antd": "^6.5.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

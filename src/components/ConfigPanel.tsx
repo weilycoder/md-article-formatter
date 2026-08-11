@@ -94,6 +94,18 @@ const configGroups: ConfigGroup[] = [
       },
     ],
   },
+  {
+    id: "clang-format",
+    title: "代码格式化",
+    items: [
+      {
+        kind: "switch",
+        key: "clangFormat",
+        label: "启用 Clang Format",
+        description: "对代码块使用 Clang Format 进行格式化",
+      },
+    ],
+  },
 ];
 
 interface SwitchItemProps {

@@ -4,6 +4,7 @@ import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
 
+import { clangFormat } from "./code-clang-fmt";
 import { cnPunctuation } from "./en-punctuation";
 import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
@@ -20,6 +21,7 @@ export interface FormatOptions {
   cnCodeSpace: boolean;
   enPunctuationReplace: boolean;
   enPunctuationReplaceMap: Record<string, MapEntry>;
+  clangFormat: boolean;
 }
 
 export const defaultFormatOptions: FormatOptions = {
@@ -37,6 +39,7 @@ export const defaultFormatOptions: FormatOptions = {
     "(": { enabled: true, to: "（" },
     ")": { enabled: true, to: "）" },
   },
+  clangFormat: false,
 };
 
 export function formatMarkdown(input: string, options: FormatOptions): string {
@@ -53,6 +56,7 @@ export function formatMarkdown(input: string, options: FormatOptions): string {
         if (options.cnEnSpace) cnEn(tree);
         if (options.cnCodeSpace) cnCode(tree);
         if (options.cnMathSpace) cnMath(tree);
+        if (options.clangFormat) clangFormat(tree);
       };
     })
     .use(remarkStringify, {
