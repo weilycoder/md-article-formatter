@@ -15,6 +15,7 @@ interface MapEditorProps {
   toLabel: string;
   value: Record<string, MapEntry>;
   onChange: (value: Record<string, MapEntry>) => void;
+  rowValidator?: (from: string, to: string) => boolean;
 }
 
 function toRows(value: Record<string, MapEntry>): MapRow[] {
@@ -25,10 +26,15 @@ function toRows(value: Record<string, MapEntry>): MapRow[] {
   }));
 }
 
-function toRecord(rows: MapRow[]): Record<string, MapEntry> {
+function toRecord(
+  rows: MapRow[],
+  rowValidator?: (from: string, to: string) => boolean,
+): Record<string, MapEntry> {
   const record: Record<string, MapEntry> = {};
   for (const { from, enabled, to } of rows) {
-    if (from === "" || to === "") continue;
+    if (from === "" && to === "") continue;
+    if (from in record) continue;
+    if (rowValidator !== undefined && !rowValidator(from, to)) continue;
     record[from] = { enabled, to };
   }
   return record;
@@ -39,20 +45,28 @@ export function MapEditor({
   toLabel,
   value,
   onChange,
+  rowValidator,
 }: MapEditorProps) {
   const [rows, setRows] = useState<MapRow[]>(() => toRows(value));
+
+  if (rowValidator === undefined) rowValidator = () => true;
 
   useEffect(() => {
     setRows((prev) => {
       const committed = toRows(value);
-      const pending = prev.filter((row) => row.from === "" || row.to === "");
+      const pending = prev.filter((row) => {
+        return !committed.some(
+          (c) =>
+            c.from === row.from && c.to === row.to && c.enabled === row.enabled,
+        );
+      });
       return [...committed, ...pending];
     });
   }, [value]);
 
   const commit = (nextRows: MapRow[]) => {
     setRows(nextRows);
-    onChange(toRecord(nextRows));
+    onChange(toRecord(nextRows, rowValidator));
   };
 
   const updateFrom = (index: number, from: string) => {
@@ -78,38 +92,63 @@ export function MapEditor({
   return (
     <Flex vertical gap={8}>
       <Flex wrap gap={8}>
-        {rows.map((row, index) => (
-          <Flex key={index} align="center" gap={8}>
-            <Input
-              style={{ width: 88 }}
-              value={row.from}
-              placeholder={fromLabel}
-              onChange={(e) => updateFrom(index, e.target.value)}
-            />
-            <Typography.Text type="secondary">→</Typography.Text>
-            <Input
-              style={{ width: 88 }}
-              value={row.to}
-              placeholder={toLabel}
-              onChange={(e) => updateTo(index, e.target.value)}
-            />
-            <Switch
-              size="small"
-              checked={row.enabled}
-              onChange={(checked) => updateEnabled(index, checked)}
-              aria-label={`启用 ${row.from} 的替换`}
-              title={`启用 ${row.from} 的替换`}
-            />
-            <Button
-              type="text"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => removeRow(index)}
-              aria-label={`删除 ${fromLabel} 映射`}
-              title={`删除 ${fromLabel} 映射`}
-            />
-          </Flex>
-        ))}
+        {rows.map((row, index) => {
+          const isValid = rowValidator ? rowValidator(row.from, row.to) : true;
+          const isDuplicate = rows
+            .slice(0, index)
+            .some((r) => r.from === row.from);
+          return (
+            <Flex key={index} align="center" gap={8}>
+              <Input
+                style={{ width: 88 }}
+                value={row.from}
+                placeholder={fromLabel}
+                status={isValid && !isDuplicate ? undefined : "error"}
+                onChange={(e) => updateFrom(index, e.target.value)}
+              />
+              <Typography.Text type="secondary">→</Typography.Text>
+              <Input
+                style={{ width: 88 }}
+                value={row.to}
+                placeholder={toLabel}
+                status={isValid && !isDuplicate ? undefined : "error"}
+                onChange={(e) => updateTo(index, e.target.value)}
+              />
+              {isDuplicate ? (
+                <Typography.Text
+                  type="danger"
+                  style={{ fontSize: 10, width: 40 }}
+                >
+                  重复映射
+                </Typography.Text>
+              ) : !isValid ? (
+                <Typography.Text
+                  type="danger"
+                  style={{ fontSize: 10, width: 40 }}
+                >
+                  无效映射
+                </Typography.Text>
+              ) : (
+                <Switch
+                  size="small"
+                  checked={row.enabled}
+                  onChange={(checked) => updateEnabled(index, checked)}
+                  aria-label={`启用 ${row.from} 的替换`}
+                  title={`启用 ${row.from} 的替换`}
+                  style={{ width: 40 }}
+                />
+              )}
+              <Button
+                type="text"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => removeRow(index)}
+                aria-label={`删除 ${fromLabel} 映射`}
+                title={`删除 ${fromLabel} 映射`}
+              />
+            </Flex>
+          );
+        })}
       </Flex>
       {rows.length === 0 && (
         <Typography.Text type="secondary" style={{ fontSize: 12 }}>

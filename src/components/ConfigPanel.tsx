@@ -42,6 +42,7 @@ type ConfigItem =
       description: string;
       fromLabel: string;
       toLabel: string;
+      rowValidator?: (from: string, to: string) => boolean;
     };
 
 interface ConfigGroup {
@@ -87,6 +88,9 @@ const configGroups: ConfigGroup[] = [
         description: "将紧邻中文字符的英文半角标点替换为对应的中文全角标点",
         fromLabel: "英文标点",
         toLabel: "中文标点",
+        rowValidator: (from, to) => {
+          return from.length === 1 && to.length === 1;
+        },
       },
     ],
   },
@@ -143,6 +147,7 @@ function MapItem({ item, options, onChange }: MapItemProps) {
         toLabel={item.toLabel}
         value={options[item.key]}
         onChange={(map) => onChange({ ...options, [item.key]: map })}
+        rowValidator={item.rowValidator}
       />
     </Flex>
   );
