@@ -43,6 +43,16 @@ const defaultFormatOptions: FormatOptions = {
   cnEnSpace: true,
   cnMathSpace: true,
   cnCodeSpace: true,
+  enPunctuationReplaceMap: {
+    ",": "，",
+    ".": "。",
+    "?": "？",
+    "!": "！",
+    ":": "：",
+    ";": "；",
+    "(": "（",
+    ")": "）",
+  },
 };
 
 function getInitialTheme(): "light" | "dark" {

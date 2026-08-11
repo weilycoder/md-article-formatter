@@ -4,6 +4,7 @@ import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
 
+import { cnPunctuation } from "./en-punctuation";
 import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
@@ -12,6 +13,7 @@ export interface FormatOptions {
   cnEnSpace: boolean;
   cnMathSpace: boolean;
   cnCodeSpace: boolean;
+  enPunctuationReplaceMap: Record<string, string>;
 }
 
 export function formatMarkdown(input: string, options: FormatOptions): string {
@@ -20,6 +22,8 @@ export function formatMarkdown(input: string, options: FormatOptions): string {
     .use(remarkMath)
     .use(function myTransformer() {
       return (tree: Root) => {
+        if (Object.keys(options.enPunctuationReplaceMap).length > 0)
+          cnPunctuation(tree, options.enPunctuationReplaceMap);
         if (options.cnEnSpace) cnEn(tree);
         if (options.cnCodeSpace) cnCode(tree);
         if (options.cnMathSpace) cnMath(tree);

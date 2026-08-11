@@ -42,3 +42,31 @@ export function getLastChar(node: any): string | undefined {
     return getLastChar(children[children.length - 1]);
   return undefined;
 }
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export function setFirstChar(node: any, newChar: string): boolean {
+  if (node === undefined) return false;
+  const value = node?.value;
+  if (typeof value === "string" && value.length > 0) {
+    node.value = newChar + value.slice(1);
+    return true;
+  }
+  const children = node?.children;
+  if (Array.isArray(children) && children.length > 0)
+    return setFirstChar(children[0], newChar);
+  return false;
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export function setLastChar(node: any, newChar: string): boolean {
+  if (node === undefined) return false;
+  const value = node?.value;
+  if (typeof value === "string" && value.length > 0) {
+    node.value = value.slice(0, -1) + newChar;
+    return true;
+  }
+  const children = node?.children;
+  if (Array.isArray(children) && children.length > 0)
+    return setLastChar(children[children.length - 1], newChar);
+  return false;
+}
