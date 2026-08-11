@@ -1,7 +1,7 @@
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
-import { oneDark } from "@codemirror/theme-one-dark";
 import { EditorView } from "@codemirror/view";
+import { materialLight, materialDark } from "@uiw/codemirror-theme-material";
 import CodeMirror from "@uiw/react-codemirror";
 import { Card, Flex, type CardProps } from "antd";
 import { type CSSProperties, type ReactNode } from "react";
@@ -31,7 +31,7 @@ export function EditorPanel({
   panelStyle,
   footerStyle,
 }: EditorPanelProps) {
-  const darkExtensions = isDark ? [oneDark] : [];
+  const colorExtensions = isDark ? materialDark : materialLight;
 
   return (
     <Card
@@ -55,7 +55,7 @@ export function EditorPanel({
         extensions={[
           markdown({ base: markdownLanguage, codeLanguages: languages }),
           EditorView.lineWrapping,
-          ...darkExtensions,
+          colorExtensions,
         ]}
         theme={isDark ? "dark" : "light"}
         editable={!readOnly}
