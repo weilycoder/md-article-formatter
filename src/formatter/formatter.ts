@@ -9,26 +9,33 @@ import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
 
+export interface MapEntry {
+  enabled: boolean;
+  to: string;
+}
+
 export interface FormatOptions {
   cnEnSpace: boolean;
   cnMathSpace: boolean;
   cnCodeSpace: boolean;
-  enPunctuationReplaceMap: Record<string, string>;
+  enPunctuationReplace: boolean;
+  enPunctuationReplaceMap: Record<string, MapEntry>;
 }
 
 export const defaultFormatOptions: FormatOptions = {
   cnEnSpace: true,
   cnMathSpace: true,
   cnCodeSpace: true,
+  enPunctuationReplace: true,
   enPunctuationReplaceMap: {
-    ",": "，",
-    ".": "。",
-    "?": "？",
-    "!": "！",
-    ":": "：",
-    ";": "；",
-    "(": "（",
-    ")": "）",
+    ",": { enabled: true, to: "，" },
+    ".": { enabled: true, to: "。" },
+    "?": { enabled: true, to: "？" },
+    "!": { enabled: true, to: "！" },
+    ":": { enabled: true, to: "：" },
+    ";": { enabled: true, to: "；" },
+    "(": { enabled: true, to: "（" },
+    ")": { enabled: true, to: "）" },
   },
 };
 
@@ -38,7 +45,10 @@ export function formatMarkdown(input: string, options: FormatOptions): string {
     .use(remarkMath)
     .use(function myTransformer() {
       return (tree: Root) => {
-        if (Object.keys(options.enPunctuationReplaceMap).length > 0)
+        if (
+          options.enPunctuationReplace &&
+          Object.keys(options.enPunctuationReplaceMap).length > 0
+        )
           cnPunctuation(tree, options.enPunctuationReplaceMap);
         if (options.cnEnSpace) cnEn(tree);
         if (options.cnCodeSpace) cnCode(tree);

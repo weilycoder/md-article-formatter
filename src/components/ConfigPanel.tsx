@@ -9,7 +9,7 @@ import {
   theme,
 } from "antd";
 
-import type { FormatOptions } from "../formatter/formatter";
+import type { FormatOptions, MapEntry } from "../formatter/formatter";
 import { MapEditor } from "./MapEditor";
 
 interface ConfigPanelProps {
@@ -22,7 +22,7 @@ type BooleanOptionKey = {
 }[keyof FormatOptions];
 
 type MapOptionKey = {
-  [K in keyof FormatOptions]: FormatOptions[K] extends Record<string, string>
+  [K in keyof FormatOptions]: FormatOptions[K] extends Record<string, MapEntry>
     ? K
     : never;
 }[keyof FormatOptions];
@@ -37,6 +37,7 @@ type ConfigItem =
   | {
       kind: "map";
       key: MapOptionKey;
+      enabledKey: BooleanOptionKey;
       label: string;
       description: string;
       fromLabel: string;
@@ -81,6 +82,7 @@ const configGroups: ConfigGroup[] = [
       {
         kind: "map",
         key: "enPunctuationReplaceMap",
+        enabledKey: "enPunctuationReplace",
         label: "英文标点替换映射",
         description: "将紧邻中文字符的英文半角标点替换为对应的中文全角标点",
         fromLabel: "英文标点",
@@ -121,14 +123,28 @@ interface MapItemProps {
 
 function MapItem({ item, options, onChange }: MapItemProps) {
   return (
-    <MapEditor
-      title={item.label}
-      description={item.description}
-      fromLabel={item.fromLabel}
-      toLabel={item.toLabel}
-      value={options[item.key]}
-      onChange={(map) => onChange({ ...options, [item.key]: map })}
-    />
+    <Flex vertical gap={8}>
+      <Flex align="center" justify="space-between">
+        <Flex vertical style={{ minWidth: 0 }}>
+          <Typography.Text strong>{item.label}</Typography.Text>
+          <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+            {item.description}
+          </Typography.Text>
+        </Flex>
+        <Switch
+          checked={options[item.enabledKey]}
+          onChange={(checked) =>
+            onChange({ ...options, [item.enabledKey]: checked })
+          }
+        />
+      </Flex>
+      <MapEditor
+        fromLabel={item.fromLabel}
+        toLabel={item.toLabel}
+        value={options[item.key]}
+        onChange={(map) => onChange({ ...options, [item.key]: map })}
+      />
+    </Flex>
   );
 }
 

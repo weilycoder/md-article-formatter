@@ -1,44 +1,47 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Input, Typography } from "antd";
+import { Button, Flex, Input, Switch, Typography } from "antd";
 import { useEffect, useState } from "react";
 
-interface MapEntry {
+import type { MapEntry } from "../formatter/formatter";
+
+interface MapRow {
   from: string;
+  enabled: boolean;
   to: string;
 }
 
 interface MapEditorProps {
-  title: string;
-  description: string;
   fromLabel: string;
   toLabel: string;
-  value: Record<string, string>;
-  onChange: (value: Record<string, string>) => void;
+  value: Record<string, MapEntry>;
+  onChange: (value: Record<string, MapEntry>) => void;
 }
 
-function toRows(value: Record<string, string>): MapEntry[] {
-  return Object.entries(value).map(([from, to]) => ({ from, to }));
+function toRows(value: Record<string, MapEntry>): MapRow[] {
+  return Object.entries(value).map(([from, entry]) => ({
+    from,
+    enabled: entry.enabled,
+    to: entry.to,
+  }));
 }
 
-function toRecord(rows: MapEntry[]): Record<string, string> {
-  const record: Record<string, string> = {};
-  for (const { from, to } of rows) {
+function toRecord(rows: MapRow[]): Record<string, MapEntry> {
+  const record: Record<string, MapEntry> = {};
+  for (const { from, enabled, to } of rows) {
     const key = from.trim();
     if (key === "" || to.trim() === "") continue;
-    record[key] = to;
+    record[key] = { enabled, to };
   }
   return record;
 }
 
 export function MapEditor({
-  title,
-  description,
   fromLabel,
   toLabel,
   value,
   onChange,
 }: MapEditorProps) {
-  const [rows, setRows] = useState<MapEntry[]>(() => toRows(value));
+  const [rows, setRows] = useState<MapRow[]>(() => toRows(value));
 
   useEffect(() => {
     setRows((prev) => {
@@ -50,7 +53,7 @@ export function MapEditor({
     });
   }, [value]);
 
-  const commit = (nextRows: MapEntry[]) => {
+  const commit = (nextRows: MapRow[]) => {
     setRows(nextRows);
     onChange(toRecord(nextRows));
   };
@@ -63,27 +66,20 @@ export function MapEditor({
     commit(rows.map((row, i) => (i === index ? { ...row, to } : row)));
   };
 
+  const updateEnabled = (index: number, enabled: boolean) => {
+    commit(rows.map((row, i) => (i === index ? { ...row, enabled } : row)));
+  };
+
   const removeRow = (index: number) => {
     commit(rows.filter((_, i) => i !== index));
   };
 
   const addRow = () => {
-    setRows([...rows, { from: "", to: "" }]);
+    setRows([...rows, { from: "", enabled: true, to: "" }]);
   };
 
   return (
     <Flex vertical gap={8}>
-      <Flex align="center" justify="space-between">
-        <Flex vertical style={{ minWidth: 0 }}>
-          <Typography.Text strong>{title}</Typography.Text>
-          <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-            {description}
-          </Typography.Text>
-        </Flex>
-        <Button size="small" icon={<PlusOutlined />} onClick={addRow}>
-          添加
-        </Button>
-      </Flex>
       <Flex wrap gap={8}>
         {rows.map((row, index) => (
           <Flex key={index} align="center" gap={8}>
@@ -99,6 +95,13 @@ export function MapEditor({
               value={row.to}
               placeholder={toLabel}
               onChange={(e) => updateTo(index, e.target.value)}
+            />
+            <Switch
+              size="small"
+              checked={row.enabled}
+              onChange={(checked) => updateEnabled(index, checked)}
+              aria-label={`启用 ${row.from} 的替换`}
+              title={`启用 ${row.from} 的替换`}
             />
             <Button
               type="text"
@@ -116,6 +119,11 @@ export function MapEditor({
           暂无映射，点击“添加”新增规则
         </Typography.Text>
       )}
+      <Flex justify="flex-end">
+        <Button size="small" icon={<PlusOutlined />} onClick={addRow}>
+          添加
+        </Button>
+      </Flex>
     </Flex>
   );
 }
