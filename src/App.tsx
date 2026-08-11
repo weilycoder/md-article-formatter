@@ -70,98 +70,104 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
       <AppHeader isDark={isDark} onToggleTheme={onToggleTheme} />
 
       {/* 编辑器区域：宽屏左右两栏，窄屏上下堆叠 */}
-      {viewMode === "edit" && (
-        <Flex
-          gap={16}
-          vertical={isMobile}
-          style={{ flex: 1, minHeight: 0, padding: 16, overflow: "hidden" }}
-        >
-          <EditorPanel
-            title="原始输入"
-            value={inputText}
-            onChange={setInputText}
-            isDark={isDark}
-            panelStyle={panelStyle}
-            footerStyle={footerStyle}
-            footerLeft={<TokenCounter text={inputText} />}
-            footerRight={
-              <Space>
-                <Button
-                  icon={<SettingOutlined />}
-                  onClick={() => setViewMode("settings")}
-                >
-                  设置
-                </Button>
-                <Upload
-                  accept=".md,.txt,.markdown,text/markdown,text/plain"
-                  showUploadList={false}
-                  beforeUpload={handleUpload}
-                >
-                  <Button icon={<UploadOutlined />}>上传</Button>
-                </Upload>
-              </Space>
-            }
-          />
+      <Flex
+        gap={16}
+        vertical={isMobile}
+        style={{
+          flex: 1,
+          minHeight: 0,
+          padding: 16,
+          overflow: "hidden",
+          display: viewMode === "edit" ? undefined : "none",
+        }}
+      >
+        <EditorPanel
+          title="原始输入"
+          value={inputText}
+          onChange={setInputText}
+          isDark={isDark}
+          panelStyle={panelStyle}
+          footerStyle={footerStyle}
+          footerLeft={<TokenCounter text={inputText} />}
+          footerRight={
+            <Space>
+              <Button
+                icon={<SettingOutlined />}
+                onClick={() => setViewMode("settings")}
+              >
+                设置
+              </Button>
+              <Upload
+                accept=".md,.txt,.markdown,text/markdown,text/plain"
+                showUploadList={false}
+                beforeUpload={handleUpload}
+              >
+                <Button icon={<UploadOutlined />}>上传</Button>
+              </Upload>
+            </Space>
+          }
+        />
 
-          <EditorPanel
-            title="格式化后输出"
-            extra={<Tag>只读</Tag>}
-            value={formattedText}
-            isDark={isDark}
-            readOnly
-            panelStyle={panelStyle}
-            footerStyle={footerStyle}
-            footerLeft={<TokenCounter text={formattedText} />}
-            footerRight={
-              <Space>
-                <Button
-                  icon={<DiffOutlined />}
-                  onClick={() => setViewMode("diff")}
-                >
-                  对比差异
-                </Button>
-                <Button icon={<CopyOutlined />} onClick={handleCopy}>
-                  复制
-                </Button>
-                <Button
-                  type="primary"
-                  icon={<DownloadOutlined />}
-                  onClick={handleDownload}
-                >
-                  下载 .md
-                </Button>
-              </Space>
-            }
-          />
-        </Flex>
-      )}
+        <EditorPanel
+          title="格式化后输出"
+          extra={<Tag>只读</Tag>}
+          value={formattedText}
+          isDark={isDark}
+          readOnly
+          panelStyle={panelStyle}
+          footerStyle={footerStyle}
+          footerLeft={<TokenCounter text={formattedText} />}
+          footerRight={
+            <Space>
+              <Button
+                icon={<DiffOutlined />}
+                onClick={() => setViewMode("diff")}
+              >
+                对比差异
+              </Button>
+              <Button icon={<CopyOutlined />} onClick={handleCopy}>
+                复制
+              </Button>
+              <Button
+                type="primary"
+                icon={<DownloadOutlined />}
+                onClick={handleDownload}
+              >
+                下载 .md
+              </Button>
+            </Space>
+          }
+        />
+      </Flex>
 
       {/* 差异对比面板 */}
-      {viewMode === "diff" && (
-        <Flex
-          style={{ flex: 1, minHeight: 0, padding: 16, overflow: "hidden" }}
-        >
-          <MergePanel
-            title="差异对比"
-            originalText={inputText}
-            modifiedText={formattedText}
-            isDark={isDark}
-            extra={
-              <Button onClick={() => setViewMode("edit")}>返回编辑</Button>
-            }
-            panelStyle={panelStyle}
-          ></MergePanel>
-        </Flex>
-      )}
+      <Flex
+        style={{
+          flex: 1,
+          minHeight: 0,
+          padding: 16,
+          overflow: "hidden",
+          display: viewMode === "diff" ? undefined : "none",
+        }}
+      >
+        <MergePanel
+          title="差异对比"
+          originalText={inputText}
+          modifiedText={formattedText}
+          isDark={isDark}
+          extra={<Button onClick={() => setViewMode("edit")}>返回编辑</Button>}
+          panelStyle={panelStyle}
+        ></MergePanel>
+      </Flex>
 
       {/* 底部配置面板 */}
-      {viewMode === "settings" && (
+      <div style={{ display: viewMode === "settings" ? undefined : "none" }}>
         <ConfigPanel
           options={options}
           onChange={setOptions}
           extra={<Button onClick={() => setViewMode("edit")}>返回编辑</Button>}
         />
-      )}
+      </div>
     </Flex>
   );
 }
