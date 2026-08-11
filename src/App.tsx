@@ -35,25 +35,13 @@ import {
 
 import { ConfigPanel } from "./components/ConfigPanel";
 import initialText from "./demo.md?raw";
-import { formatMarkdown, type FormatOptions } from "./formatter/formatter";
+import {
+  formatMarkdown,
+  type FormatOptions,
+  defaultFormatOptions,
+} from "./formatter/formatter";
 
 const { Text, Title } = Typography;
-
-const defaultFormatOptions: FormatOptions = {
-  cnEnSpace: true,
-  cnMathSpace: true,
-  cnCodeSpace: true,
-  enPunctuationReplaceMap: {
-    ",": "，",
-    ".": "。",
-    "?": "？",
-    "!": "！",
-    ":": "：",
-    ";": "；",
-    "(": "（",
-    ")": "）",
-  },
-};
 
 function getInitialTheme(): "light" | "dark" {
   const saved = localStorage.getItem("md-formatter-theme");

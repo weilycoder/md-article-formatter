@@ -16,6 +16,22 @@ export interface FormatOptions {
   enPunctuationReplaceMap: Record<string, string>;
 }
 
+export const defaultFormatOptions: FormatOptions = {
+  cnEnSpace: true,
+  cnMathSpace: true,
+  cnCodeSpace: true,
+  enPunctuationReplaceMap: {
+    ",": "，",
+    ".": "。",
+    "?": "？",
+    "!": "！",
+    ":": "：",
+    ";": "；",
+    "(": "（",
+    ")": "）",
+  },
+};
+
 export function formatMarkdown(input: string, options: FormatOptions): string {
   const processor = unified()
     .use(remarkParse)
