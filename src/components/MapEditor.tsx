@@ -119,9 +119,17 @@ export function MapEditor({
           暂无映射，点击“添加”新增规则
         </Typography.Text>
       )}
-      <Flex justify="flex-end">
+      <Flex justify="flex-end" gap={8}>
         <Button size="small" icon={<PlusOutlined />} onClick={addRow}>
           添加
+        </Button>
+        <Button
+          size="small"
+          icon={<DeleteOutlined />}
+          onClick={() => commit([])}
+          danger
+        >
+          清空
         </Button>
       </Flex>
     </Flex>
