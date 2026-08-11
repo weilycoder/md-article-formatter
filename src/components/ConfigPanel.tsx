@@ -10,7 +10,8 @@ import {
   type CardProps,
 } from "antd";
 
-import type { FormatOptions, MapEntry } from "../formatter/formatter";
+import { useClangFormat } from "../formatter/code-clang-fmt";
+import { type FormatOptions, type MapEntry } from "../formatter/formatter";
 import { MapEditor } from "./MapEditor";
 
 interface ConfigPanelProps {
@@ -81,7 +82,7 @@ const configGroups: ConfigGroup[] = [
         key: "cnPuncSpace",
         label: "中文标点空格",
         description: "中文标点前后自动去除多余空格",
-      }
+      },
     ],
   },
   {
@@ -123,6 +124,9 @@ interface SwitchItemProps {
 }
 
 function SwitchItem({ item, options, onChange }: SwitchItemProps) {
+  const isClangFormatActive = useClangFormat();
+  const disabled = item.key === "clangFormat" && !isClangFormatActive;
+
   return (
     <Flex align="center" justify="space-between" gap={12}>
       <Flex vertical style={{ minWidth: 0 }}>
@@ -134,6 +138,8 @@ function SwitchItem({ item, options, onChange }: SwitchItemProps) {
       <Switch
         checked={options[item.key]}
         onChange={(checked) => onChange({ ...options, [item.key]: checked })}
+        disabled={disabled}
+        title={disabled ? "Clang Format 未加载，请稍后" : undefined}
       />
     </Flex>
   );
