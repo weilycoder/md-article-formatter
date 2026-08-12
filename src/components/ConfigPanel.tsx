@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   Col,
   Divider,
@@ -11,7 +12,11 @@ import {
 } from "antd";
 
 import { useClangFormat } from "../formatter/code-clang-fmt";
-import { type FormatOptions, type MapEntry } from "../formatter/formatter";
+import {
+  defaultFormatOptions,
+  type FormatOptions,
+  type MapEntry,
+} from "../formatter/formatter";
 import { MapEditor } from "./MapEditor";
 
 interface ConfigPanelProps {
@@ -224,6 +229,14 @@ export const ConfigPanel = ({ options, onChange, extra }: ConfigPanelProps) => {
             <Divider style={{ margin: "16px 0 0" }} />
           </section>
         ))}
+        <Button
+          danger
+          onClick={() => {
+            onChange({ ...defaultFormatOptions });
+          }}
+        >
+          重置为默认配置
+        </Button>
       </Flex>
     </Card>
   );

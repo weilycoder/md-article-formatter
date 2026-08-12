@@ -3,6 +3,7 @@ import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
+import { z } from "zod";
 
 import { clangFormat } from "./code-clang-fmt";
 import { cnPunctuation } from "./en-punctuation";
@@ -11,20 +12,24 @@ import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
 import { cnPunc } from "./space/cn-punc";
 
-export interface MapEntry {
-  enabled: boolean;
-  to: string;
-}
+export const MapEntrySchema = z.object({
+  enabled: z.boolean(),
+  to: z.string(),
+});
 
-export interface FormatOptions {
-  cnEnSpace: boolean;
-  cnMathSpace: boolean;
-  cnCodeSpace: boolean;
-  cnPuncSpace: boolean;
-  enPunctuationReplace: boolean;
-  enPunctuationReplaceMap: Record<string, MapEntry>;
-  clangFormat: boolean;
-}
+export type MapEntry = z.infer<typeof MapEntrySchema>;
+
+export const FormatOptionsSchema = z.object({
+  cnEnSpace: z.boolean(),
+  cnMathSpace: z.boolean(),
+  cnCodeSpace: z.boolean(),
+  cnPuncSpace: z.boolean(),
+  enPunctuationReplace: z.boolean(),
+  enPunctuationReplaceMap: z.record(z.string(), MapEntrySchema),
+  clangFormat: z.boolean(),
+});
+
+export type FormatOptions = z.infer<typeof FormatOptionsSchema>;
 
 export const defaultFormatOptions: FormatOptions = {
   cnEnSpace: true,
