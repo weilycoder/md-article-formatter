@@ -13,6 +13,7 @@ import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
 import { cnPunc } from "./space/cn-punc";
+import { ruffFormat } from "./code/ruff-py";
 
 export const MapEntrySchema = z.object({
   enabled: z.boolean(),
@@ -40,6 +41,7 @@ export const FormatOptionsSchema = z.object({
   }),
   clangFormat: z.boolean().default(false),
   remarkFormat: z.boolean().default(false),
+  ruffFormat: z.boolean().default(false),
   showFormatControl: z.boolean().default(true),
 });
 
@@ -67,6 +69,7 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
         if (options.boldItalicSpace) boldItalic(tree);
         if (options.clangFormat) clangFormat(tree);
         if (options.remarkFormat) remarkFormat(tree);
+        if (options.ruffFormat) ruffFormat(tree);
       };
     })
     .use(remarkStringify, {

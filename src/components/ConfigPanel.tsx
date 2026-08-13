@@ -13,6 +13,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { clangFormatPromise } from "../formatter/code/clang-fmt";
+import { ruffPromise } from "../formatter/code/ruff-py";
 import {
   defaultFormatOptions,
   type FormatOptions,
@@ -137,6 +138,15 @@ const configGroups: ConfigGroup[] = [
         key: "remarkFormat",
         label: "使用 Remark 进行格式化",
         description: "对 Markdown 代码块进行格式化",
+      },
+      {
+        kind: "switch",
+        key: "ruffFormat",
+        label: "使用 Ruff 进行格式化",
+        description: "对 Python 代码块进行格式化",
+        readiness: ruffPromise.then(() => {}),
+        pendingTitle: "Ruff 正在加载，请稍后",
+        errorTitle: "Ruff 加载失败，请检查网络或刷新页面",
       },
     ],
   },

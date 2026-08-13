@@ -68,3 +68,13 @@ return 0;
 # 这是一个标题
 paragraph with some text.
 ```
+
+由 Ruff 提供 Python 代码块的格式化功能。
+
+```python
+a,b=1,2
+def add(x,y):
+  return x+y
+result=add(a,b)
+print(result)
+```
