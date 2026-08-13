@@ -91,15 +91,9 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
     .use(remarkMath)
     .use(function myTransformer() {
       return (tree: Root) => {
-        if (
-          options.enPunctuationReplace &&
-          Object.keys(options.enPunctuationReplaceMap).length > 0
-        )
+        if (options.enPunctuationReplace)
           cnPunctuation(tree, options.enPunctuationReplaceMap);
-        if (
-          options.mathSymbolReplace &&
-          Object.keys(options.mathSymbolReplaceMap).length > 0
-        )
+        if (options.mathSymbolReplace)
           symbolReplace(tree, options.mathSymbolReplaceMap);
         if (options.cnEnSpace) cnEn(tree);
         if (options.cnCodeSpace) cnCode(tree);

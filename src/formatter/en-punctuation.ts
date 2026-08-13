@@ -31,6 +31,7 @@ export function cnPunctuation(
   tree: Root,
   replaceMap: Record<string, MapEntry>,
 ) {
+  if (Object.keys(replaceMap).length === 0) return;
   visit(tree, "text", (node) => {
     node.value = replacePunctuation(node.value, replaceMap);
   });

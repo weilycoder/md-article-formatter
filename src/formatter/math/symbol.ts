@@ -7,6 +7,7 @@ export function symbolReplace(
   tree: Root,
   replaceMap: Record<string, MapEntry>,
 ) {
+  if (Object.keys(replaceMap).length === 0) return;
   visit(tree, (node, index, parent) => {
     if (!parent || index === undefined) return;
     if (node.type !== "math" && node.type !== "inlineMath") return;
