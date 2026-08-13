@@ -26,7 +26,6 @@ export const FormatOptionsSchema = z.object({
   cnCodeSpace: z.boolean().default(true),
   cnPuncSpace: z.boolean().default(true),
   boldItalicSpace: z.boolean().default(true),
-  showFormatControl: z.boolean().default(true),
   enPunctuationReplace: z.boolean().default(true),
   enPunctuationReplaceMap: z.record(z.string(), MapEntrySchema).default({
     ",": { enabled: true, to: "，" },
@@ -39,6 +38,7 @@ export const FormatOptionsSchema = z.object({
     ")": { enabled: true, to: "）" },
   }),
   clangFormat: z.boolean().default(false),
+  showFormatControl: z.boolean().default(true),
 });
 
 export type FormatOptions = z.infer<typeof FormatOptionsSchema>;

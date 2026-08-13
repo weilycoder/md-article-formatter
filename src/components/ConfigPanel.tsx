@@ -94,12 +94,6 @@ const configGroups: ConfigGroup[] = [
         label: "加粗/斜体空格",
         description: "加粗/斜体文本前后自动移出多余空格",
       },
-      {
-        kind: "switch",
-        key: "showFormatControl",
-        label: "显示格式化控制字符",
-        description: "转义格式化控制字符（如零宽空格）",
-      },
     ],
   },
   {
@@ -129,6 +123,18 @@ const configGroups: ConfigGroup[] = [
         key: "clangFormat",
         label: "启用 Clang Format",
         description: "对代码块使用 Clang Format 进行格式化",
+      },
+    ],
+  },
+  {
+    id: "misc",
+    title: "杂项",
+    items: [
+      {
+        kind: "switch",
+        key: "showFormatControl",
+        label: "显示格式化控制字符",
+        description: "转义格式化控制字符（如零宽空格）",
       },
     ],
   },
