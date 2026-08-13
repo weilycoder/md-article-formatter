@@ -23,6 +23,11 @@ export const MapEntrySchema = z.object({
 
 export type MapEntry = z.infer<typeof MapEntrySchema>;
 
+const enPunctuationReplaceEntrySchema = z.object({
+  enabled: z.boolean().default(true),
+  to: z.string().length(1),
+}) satisfies z.ZodType<MapEntry>;
+
 export const FormatOptionsSchema = z.object({
   cnEnSpace: z.boolean().default(true),
   cnMathSpace: z.boolean().default(true),
@@ -30,16 +35,18 @@ export const FormatOptionsSchema = z.object({
   cnPuncSpace: z.boolean().default(true),
   boldItalicSpace: z.boolean().default(true),
   enPunctuationReplace: z.boolean().default(true),
-  enPunctuationReplaceMap: z.record(z.string(), MapEntrySchema).default({
-    ",": { enabled: true, to: "，" },
-    ".": { enabled: true, to: "。" },
-    "?": { enabled: true, to: "？" },
-    "!": { enabled: true, to: "！" },
-    ":": { enabled: true, to: "：" },
-    ";": { enabled: true, to: "；" },
-    "(": { enabled: true, to: "（" },
-    ")": { enabled: true, to: "）" },
-  }),
+  enPunctuationReplaceMap: z
+    .record(z.string().length(1), enPunctuationReplaceEntrySchema)
+    .default({
+      ",": { enabled: true, to: "，" },
+      ".": { enabled: true, to: "。" },
+      "?": { enabled: true, to: "？" },
+      "!": { enabled: true, to: "！" },
+      ":": { enabled: true, to: "：" },
+      ";": { enabled: true, to: "；" },
+      "(": { enabled: true, to: "（" },
+      ")": { enabled: true, to: "）" },
+    }),
   clangFormat: z.boolean().default(false),
   remarkFormat: z.boolean().default(false),
   ruffFormat: z.boolean().default(false),
