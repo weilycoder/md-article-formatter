@@ -26,6 +26,7 @@ export const FormatOptionsSchema = z.object({
   cnCodeSpace: z.boolean().default(true),
   cnPuncSpace: z.boolean().default(true),
   boldItalicSpace: z.boolean().default(true),
+  showFormatControl: z.boolean().default(true),
   enPunctuationReplace: z.boolean().default(true),
   enPunctuationReplaceMap: z.record(z.string(), MapEntrySchema).default({
     ",": { enabled: true, to: "，" },
@@ -42,7 +43,9 @@ export const FormatOptionsSchema = z.object({
 
 export type FormatOptions = z.infer<typeof FormatOptionsSchema>;
 
-export const defaultFormatOptions: FormatOptions = FormatOptionsSchema.parse({});
+export const defaultFormatOptions: FormatOptions = FormatOptionsSchema.parse(
+  {},
+);
 
 function _formatMarkdown(input: string, options: FormatOptions): string {
   const processor = unified()
@@ -69,8 +72,13 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
       listItemIndent: "one",
     });
 
-  const result = processor.processSync(input);
-  return String(result);
+  const result = String(processor.processSync(input));
+  return options.showFormatControl
+    ? result.replaceAll(
+        /\p{Cf}/gu,
+        (c) => `&#x${c.codePointAt(0)?.toString(16).toUpperCase()};`,
+      )
+    : result;
 }
 
 export function formatMarkdown(
