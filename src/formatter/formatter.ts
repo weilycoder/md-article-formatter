@@ -5,7 +5,7 @@ import remarkStringify from "remark-stringify";
 import { unified } from "unified";
 import { z } from "zod";
 
-import { clangFormat } from "./code-clang-fmt";
+import { clangFormat } from "./code/clang-fmt";
 import { cnPunctuation } from "./en-punctuation";
 import { boldItalic } from "./space/bold-italic";
 import { cnCode } from "./space/cn-code";

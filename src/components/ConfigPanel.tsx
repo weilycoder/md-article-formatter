@@ -11,12 +11,13 @@ import {
   type CardProps,
 } from "antd";
 
-import { useClangFormat } from "../formatter/code-clang-fmt";
+import { clangFormatPromise } from "../formatter/code/clang-fmt";
 import {
   defaultFormatOptions,
   type FormatOptions,
   type MapEntry,
 } from "../formatter/formatter";
+import { useAsyncReadyStatus } from "../hooks/useAsyncReadyStatus";
 import { MapEditor } from "./MapEditor";
 
 interface ConfigPanelProps {
@@ -41,6 +42,9 @@ type ConfigItem =
       key: BooleanOptionKey;
       label: string;
       description: string;
+      readiness?: Promise<void>;
+      pendingTitle?: string;
+      errorTitle?: string;
     }
   | {
       kind: "map";
@@ -123,6 +127,9 @@ const configGroups: ConfigGroup[] = [
         key: "clangFormat",
         label: "启用 Clang Format",
         description: "对代码块使用 Clang Format 进行格式化",
+        readiness: clangFormatPromise,
+        pendingTitle: "Clang Format 正在加载，请稍后",
+        errorTitle: "Clang Format 加载失败，请检查网络或刷新页面",
       },
     ],
   },
@@ -147,8 +154,8 @@ interface SwitchItemProps {
 }
 
 function SwitchItem({ item, options, onChange }: SwitchItemProps) {
-  const isClangFormatActive = useClangFormat();
-  const disabled = item.key === "clangFormat" && !isClangFormatActive;
+  const status = useAsyncReadyStatus(item.readiness);
+  const disabled = status === "pending" || status === "error";
 
   return (
     <Flex align="center" justify="space-between" gap={12}>
@@ -162,7 +169,13 @@ function SwitchItem({ item, options, onChange }: SwitchItemProps) {
         checked={options[item.key]}
         onChange={(checked) => onChange({ ...options, [item.key]: checked })}
         disabled={disabled}
-        title={disabled ? "Clang Format 未加载，请稍后" : undefined}
+        title={
+          disabled
+            ? status === "pending"
+              ? (item.pendingTitle ?? "正在加载，请稍后")
+              : (item.errorTitle ?? "加载失败，请检查网络或刷新页面")
+            : undefined
+        }
       />
     </Flex>
   );
