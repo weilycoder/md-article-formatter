@@ -1,4 +1,5 @@
 import type { Root } from "mdast";
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
@@ -54,6 +55,7 @@ export const defaultFormatOptions: FormatOptions = FormatOptionsSchema.parse(
 function _formatMarkdown(input: string, options: FormatOptions): string {
   const processor = unified()
     .use(remarkParse)
+    .use(remarkGfm, { singleTilde: false })
     .use(remarkMath)
     .use(function myTransformer() {
       return (tree: Root) => {
