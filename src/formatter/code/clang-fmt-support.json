@@ -1,0 +1,33 @@
+{
+  "c": "main.c",
+  "cpp": "main.cpp",
+  "cxx": "main.cxx",
+  "cc": "main.cc",
+  "c++": "main.cpp",
+  "h": "main.h",
+  "hpp": "main.hpp",
+
+  "objc": "main.m",
+  "objective-c": "main.m",
+  "objcpp": "main.mm",
+  "objective-cpp": "main.mm",
+
+  "java": "main.java",
+
+  "cs": "main.cs",
+  "csharp": "main.cs",
+
+  "js": "main.js",
+  "mjs": "main.mjs",
+  "ts": "main.ts",
+  "javascript": "main.js",
+  "typescript": "main.ts",
+
+  "json": "main.json",
+
+  "proto": "main.proto",
+  "textproto": "main.textproto",
+
+  "verilog": "main.v",
+  "systemverilog": "main.sv"
+}

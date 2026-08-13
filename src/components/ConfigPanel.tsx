@@ -126,7 +126,7 @@ const configGroups: ConfigGroup[] = [
         kind: "switch",
         key: "clangFormat",
         label: "启用 Clang Format",
-        description: "对代码块使用 Clang Format 进行格式化",
+        description: "对 Clang Format 支持的代码块进行格式化",
         readiness: clangFormatPromise,
         pendingTitle: "Clang Format 正在加载，请稍后",
         errorTitle: "Clang Format 加载失败，请检查网络或刷新页面",
