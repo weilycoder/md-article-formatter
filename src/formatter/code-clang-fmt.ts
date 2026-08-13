@@ -9,9 +9,7 @@ let initPromise: Promise<void> | null = null;
 async function ensureInit() {
   if (isActive) return;
   if (initPromise !== null) return initPromise;
-  initPromise = init(
-    "https://cdn.jsdelivr.net/npm/@wasm-fmt/clang-format@22.1.8/clang-format.wasm",
-  )
+  initPromise = init()
     .then(() => {
       isActive = true;
     })
