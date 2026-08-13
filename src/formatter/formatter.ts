@@ -10,6 +10,7 @@ import { clangFormat } from "./code/clang-fmt";
 import { remarkFormat } from "./code/remark-md";
 import { ruffFormat } from "./code/ruff-py";
 import { cnPunctuation } from "./en-punctuation";
+import { symbolReplace } from "./math/symbol";
 import { boldItalic } from "./space/bold-italic";
 import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
@@ -26,6 +27,13 @@ export type MapEntry = z.infer<typeof MapEntrySchema>;
 const enPunctuationReplaceEntrySchema = z.object({
   enabled: z.boolean().default(true),
   to: z.string().length(1),
+}) satisfies z.ZodType<MapEntry>;
+
+const mathSymbolReplaceEntrySchema = z.object({
+  enabled: z.boolean().default(true),
+  to: z
+    .string()
+    .refine((s) => /^\\[a-zA-Z]+$/.test(s) || /^[^a-zA-Z]$/.test(s)),
 }) satisfies z.ZodType<MapEntry>;
 
 export const FormatOptionsSchema = z.object({
@@ -46,6 +54,23 @@ export const FormatOptionsSchema = z.object({
       ";": { enabled: true, to: "；" },
       "(": { enabled: true, to: "（" },
       ")": { enabled: true, to: "）" },
+    }),
+  mathSymbolReplace: z.boolean().default(true),
+  mathSymbolReplaceMap: z
+    .record(
+      z.string().refine((s) => s.length > 0 && !/[a-zA-Z]+/.test(s)),
+      mathSymbolReplaceEntrySchema,
+    )
+    .default({
+      "*": { enabled: true, to: "\\times" },
+      "<=": { enabled: true, to: "\\leq" },
+      ">=": { enabled: true, to: "\\geq" },
+      "!=": { enabled: true, to: "\\neq" },
+      "==": { enabled: true, to: "=" },
+      "->": { enabled: true, to: "\\to" },
+      "<-": { enabled: true, to: "\\gets" },
+      "=>": { enabled: true, to: "\\implies" },
+      "<=>": { enabled: true, to: "\\iff" },
     }),
   clangFormat: z.boolean().default(false),
   remarkFormat: z.boolean().default(false),
@@ -71,6 +96,11 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
           Object.keys(options.enPunctuationReplaceMap).length > 0
         )
           cnPunctuation(tree, options.enPunctuationReplaceMap);
+        if (
+          options.mathSymbolReplace &&
+          Object.keys(options.mathSymbolReplaceMap).length > 0
+        )
+          symbolReplace(tree, options.mathSymbolReplaceMap);
         if (options.cnEnSpace) cnEn(tree);
         if (options.cnCodeSpace) cnCode(tree);
         if (options.cnMathSpace) cnMath(tree);
