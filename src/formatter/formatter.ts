@@ -6,6 +6,7 @@ import { unified } from "unified";
 import { z } from "zod";
 
 import { clangFormat } from "./code/clang-fmt";
+import { remarkFormat } from "./code/remark-md";
 import { cnPunctuation } from "./en-punctuation";
 import { boldItalic } from "./space/bold-italic";
 import { cnCode } from "./space/cn-code";
@@ -38,6 +39,7 @@ export const FormatOptionsSchema = z.object({
     ")": { enabled: true, to: "）" },
   }),
   clangFormat: z.boolean().default(false),
+  remarkFormat: z.boolean().default(false),
   showFormatControl: z.boolean().default(true),
 });
 
@@ -64,6 +66,7 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
         if (options.cnPuncSpace) cnPunc(tree);
         if (options.boldItalicSpace) boldItalic(tree);
         if (options.clangFormat) clangFormat(tree);
+        if (options.remarkFormat) remarkFormat(tree);
       };
     })
     .use(remarkStringify, {

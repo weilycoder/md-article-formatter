@@ -125,12 +125,18 @@ const configGroups: ConfigGroup[] = [
       {
         kind: "switch",
         key: "clangFormat",
-        label: "启用 Clang Format",
-        description: "对 Clang Format 支持的代码块进行格式化",
+        label: "启用 Clang-Format",
+        description: "对 Clang-Format 支持的代码块进行格式化",
         readiness: clangFormatPromise,
         pendingTitle: "Clang Format 正在加载，请稍后",
         errorTitle: "Clang Format 加载失败，请检查网络或刷新页面",
       },
+      {
+        kind: "switch",
+        key: "remarkFormat",
+        label: "使用 Remark 进行格式化",
+        description: "对 Markdown 代码块进行格式化",
+      }
     ],
   },
   {

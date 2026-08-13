@@ -47,7 +47,9 @@ Python 交换语句`a, b = b, a`
 
 你好,世界
 
-### 代码格式化（Beta，默认不开启）
+### 代码格式化（默认不开启）
+
+由 clang-format 提供 C/C++/Java/JavaScript/TypeScript 等语言的代码格式化功能。
 
 ```cpp
 #include<iostream>
@@ -60,3 +62,9 @@ return 0;
 }
 ```
 
+由 remark 提供 Markdown 代码块的格式化功能。
+
+```markdown
+# 这是一个标题
+paragraph with some text.
+```
