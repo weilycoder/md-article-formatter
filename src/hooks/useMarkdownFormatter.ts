@@ -17,7 +17,7 @@ function getInitialFormatOptions(): FormatOptions {
       console.error("Failed to parse saved format options:", error);
     }
   }
-  return { ...defaultFormatOptions };
+  return defaultFormatOptions;
 }
 
 export function useMarkdownFormatter() {
