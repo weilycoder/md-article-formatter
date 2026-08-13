@@ -17,26 +17,21 @@ clangFormatPromise
     console.error("Failed to initialize Clang Format WASM:", err);
   });
 
-function clangFormatCode(code: string, filename: string): string {
+export function clangFormat(tree: Root) {
   if (!ready) {
     console.warn("Clang Format is not ready. Returning original code.");
-    return code;
+    return;
   }
-  try {
-    return format(code, filename);
-  } catch (e) {
-    console.error("Clang Format Error:", e);
-    return code;
-  }
-}
-
-export function clangFormat(tree: Root) {
   visit(tree, "code", (node) => {
     if (!node.lang) return;
     const filename = (langToFilename as Record<string, string>)[
       node.lang.toLowerCase()
     ];
     if (!filename) return;
-    node.value = clangFormatCode(node.value, filename);
+    try {
+      node.value = format(node.value, filename);
+    } catch (e) {
+      console.error("Clang Format Error:", e);
+    }
   });
 }
