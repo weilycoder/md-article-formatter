@@ -8,13 +8,13 @@ import { z } from "zod";
 
 import { clangFormat } from "./code/clang-fmt";
 import { remarkFormat } from "./code/remark-md";
+import { ruffFormat } from "./code/ruff-py";
 import { cnPunctuation } from "./en-punctuation";
 import { boldItalic } from "./space/bold-italic";
 import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
 import { cnPunc } from "./space/cn-punc";
-import { ruffFormat } from "./code/ruff-py";
 
 export const MapEntrySchema = z.object({
   enabled: z.boolean(),

@@ -1,5 +1,4 @@
 import init, { Workspace, PositionEncoding } from "@astral-sh/ruff-wasm-web";
-
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 
