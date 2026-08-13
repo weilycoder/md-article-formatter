@@ -20,24 +20,12 @@ export const MapEntrySchema = z.object({
 export type MapEntry = z.infer<typeof MapEntrySchema>;
 
 export const FormatOptionsSchema = z.object({
-  cnEnSpace: z.boolean(),
-  cnMathSpace: z.boolean(),
-  cnCodeSpace: z.boolean(),
-  cnPuncSpace: z.boolean(),
-  enPunctuationReplace: z.boolean(),
-  enPunctuationReplaceMap: z.record(z.string(), MapEntrySchema),
-  clangFormat: z.boolean(),
-});
-
-export type FormatOptions = z.infer<typeof FormatOptionsSchema>;
-
-export const defaultFormatOptions: FormatOptions = {
-  cnEnSpace: true,
-  cnMathSpace: true,
-  cnCodeSpace: true,
-  cnPuncSpace: true,
-  enPunctuationReplace: true,
-  enPunctuationReplaceMap: {
+  cnEnSpace: z.boolean().default(true),
+  cnMathSpace: z.boolean().default(true),
+  cnCodeSpace: z.boolean().default(true),
+  cnPuncSpace: z.boolean().default(true),
+  enPunctuationReplace: z.boolean().default(true),
+  enPunctuationReplaceMap: z.record(z.string(), MapEntrySchema).default({
     ",": { enabled: true, to: "，" },
     ".": { enabled: true, to: "。" },
     "?": { enabled: true, to: "？" },
@@ -46,9 +34,13 @@ export const defaultFormatOptions: FormatOptions = {
     ";": { enabled: true, to: "；" },
     "(": { enabled: true, to: "（" },
     ")": { enabled: true, to: "）" },
-  },
-  clangFormat: false,
-};
+  }),
+  clangFormat: z.boolean().default(false),
+});
+
+export type FormatOptions = z.infer<typeof FormatOptionsSchema>;
+
+export const defaultFormatOptions: FormatOptions = FormatOptionsSchema.parse({});
 
 function _formatMarkdown(input: string, options: FormatOptions): string {
   const processor = unified()
