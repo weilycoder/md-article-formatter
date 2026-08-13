@@ -11,6 +11,7 @@ import {
   type CardProps,
 } from "antd";
 
+import { useEffect, useState } from "react";
 import { clangFormatPromise } from "../formatter/code/clang-fmt";
 import {
   defaultFormatOptions,
@@ -136,7 +137,7 @@ const configGroups: ConfigGroup[] = [
         key: "remarkFormat",
         label: "使用 Remark 进行格式化",
         description: "对 Markdown 代码块进行格式化",
-      }
+      },
     ],
   },
   {
@@ -162,6 +163,14 @@ interface SwitchItemProps {
 function SwitchItem({ item, options, onChange }: SwitchItemProps) {
   const status = useAsyncReadyStatus(item.readiness);
   const disabled = status === "pending" || status === "error";
+  const [rerun, setRerun] = useState(false);
+
+  useEffect(() => {
+    if (status === "ready" && !rerun) {
+      setRerun(true);
+      onChange({ ...options });
+    }
+  }, [status, onChange, options, rerun]);
 
   return (
     <Flex align="center" justify="space-between" gap={12}>
