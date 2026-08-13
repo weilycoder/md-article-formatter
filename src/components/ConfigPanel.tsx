@@ -88,6 +88,12 @@ const configGroups: ConfigGroup[] = [
         label: "中文标点空格",
         description: "中文标点前后自动去除多余空格",
       },
+      {
+        kind: "switch",
+        key: "boldItalicSpace",
+        label: "加粗/斜体空格",
+        description: "加粗/斜体文本前后自动移出多余空格",
+      },
     ],
   },
   {

@@ -30,6 +30,81 @@ export function isLatin(ch: string): boolean {
 }
 
 // oxlint-disable-next-line typescript/no-explicit-any
+export function getString(node: any): string | undefined {
+  if (node === undefined) return undefined;
+  const value = node?.value;
+  if (typeof value === "string") return value;
+  const children = node?.children;
+  if (Array.isArray(children) && children.length === 1)
+    return getString(children[0]);
+  return undefined;
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export function setString(node: any, newValue: string): boolean {
+  if (node === undefined) return false;
+  const value = node?.value;
+  if (typeof value === "string") {
+    node.value = newValue;
+    return true;
+  }
+  const children = node?.children;
+  if (Array.isArray(children) && children.length === 1)
+    return setString(children[0], newValue);
+  return false;
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export function getFirstString(node: any): string | undefined {
+  if (node === undefined) return undefined;
+  const value = node?.value;
+  if (typeof value === "string" && value.length > 0) return value;
+  const children = node?.children;
+  if (Array.isArray(children) && children.length > 0)
+    return getFirstString(children[0]);
+  return undefined;
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export function getLastString(node: any): string | undefined {
+  if (node === undefined) return undefined;
+  const value = node?.value;
+  if (typeof value === "string" && value.length > 0) return value;
+  const children = node?.children;
+  if (Array.isArray(children) && children.length > 0)
+    return getLastString(children[children.length - 1]);
+  return undefined;
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export function setFirstString(node: any, newValue: string): boolean {
+  if (node === undefined) return false;
+  const value = node?.value;
+  if (typeof value === "string" && value.length > 0) {
+    node.value = newValue;
+    return true;
+  }
+  const children = node?.children;
+  if (Array.isArray(children) && children.length > 0)
+    return setFirstString(children[0], newValue);
+  return false;
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export function setLastString(node: any, newValue: string): boolean {
+  if (node === undefined) return false;
+  const value = node?.value;
+  if (typeof value === "string" && value.length > 0) {
+    node.value = newValue;
+    return true;
+  }
+  const children = node?.children;
+  if (Array.isArray(children) && children.length > 0)
+    return setLastString(children[children.length - 1], newValue);
+  return false;
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
 export function getFirstChar(node: any): string | undefined {
   if (node === undefined) return undefined;
   const value = node?.value;

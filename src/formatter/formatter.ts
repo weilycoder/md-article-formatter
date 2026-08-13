@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { clangFormat } from "./code-clang-fmt";
 import { cnPunctuation } from "./en-punctuation";
+import { boldItalic } from "./space/bold-italic";
 import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
@@ -24,6 +25,7 @@ export const FormatOptionsSchema = z.object({
   cnMathSpace: z.boolean().default(true),
   cnCodeSpace: z.boolean().default(true),
   cnPuncSpace: z.boolean().default(true),
+  boldItalicSpace: z.boolean().default(true),
   enPunctuationReplace: z.boolean().default(true),
   enPunctuationReplaceMap: z.record(z.string(), MapEntrySchema).default({
     ",": { enabled: true, to: "，" },
@@ -57,6 +59,7 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
         if (options.cnCodeSpace) cnCode(tree);
         if (options.cnMathSpace) cnMath(tree);
         if (options.cnPuncSpace) cnPunc(tree);
+        if (options.boldItalicSpace) boldItalic(tree);
         if (options.clangFormat) clangFormat(tree);
       };
     })
