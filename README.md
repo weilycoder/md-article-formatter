@@ -29,13 +29,13 @@ pnpm dev
 
 ## 常用脚本
 
-| 命令 | 说明 |
-| --- | --- |
-| `pnpm dev` | 启动开发服务器 |
-| `pnpm build` | `tsc -b && vite build` |
-| `pnpm preview` | 本地预览构建产物 |
-| `pnpm lint` / `pnpm lint:fix` | oxlint 检查 / 自动修复 |
-| `pnpm format` / `pnpm format:check` | oxfmt 格式化 / 检查 |
+| 命令                                | 说明                   |
+| ----------------------------------- | ---------------------- |
+| `pnpm dev`                          | 启动开发服务器         |
+| `pnpm build`                        | `tsc -b && vite build` |
+| `pnpm preview`                      | 本地预览构建产物       |
+| `pnpm lint` / `pnpm lint:fix`       | oxlint 检查 / 自动修复 |
+| `pnpm format` / `pnpm format:check` | oxfmt 格式化 / 检查    |
 
 ## 配置
 
