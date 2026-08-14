@@ -10,7 +10,7 @@ import { clangFormat } from "./code/clang-fmt";
 import { remarkFormat } from "./code/remark-md";
 import { ruffFormat } from "./code/ruff-py";
 import { cnPunctuation } from "./en-punctuation";
-import { symbolReplace } from "./math/symbol";
+import { symbolReplace } from "./math-raw/symbol";
 import { boldItalic } from "./space/bold-italic";
 import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
