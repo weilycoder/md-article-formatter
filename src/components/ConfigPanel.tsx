@@ -122,8 +122,8 @@ const configGroups: ConfigGroup[] = [
     ],
   },
   {
-    id: "math-symbol",
-    title: "数学符号",
+    id: "math",
+    title: "数学公式",
     items: [
       {
         kind: "map",
@@ -132,6 +132,15 @@ const configGroups: ConfigGroup[] = [
         label: "数学符号替换映射",
         description: "将公式中的指定符号替换为对应的 LaTeX 命令",
         fromLabel: "符号",
+        toLabel: "LaTeX 命令",
+      },
+      {
+        kind: "map",
+        key: "mathFuncReplaceMap",
+        enabledKey: "mathFuncReplace",
+        label: "数学函数替换映射",
+        description: "将公式中的指定函数替换为对应的 LaTeX 命令",
+        fromLabel: "函数名",
         toLabel: "LaTeX 命令",
       },
     ],

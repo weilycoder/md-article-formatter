@@ -12,6 +12,7 @@ import { clangFormat } from "./code/clang-fmt";
 import { remarkFormat } from "./code/remark-md";
 import { ruffFormat } from "./code/ruff-py";
 import { cnPunctuation } from "./en-punctuation";
+import { funcReplace } from "./math-raw/func";
 import { symbolReplace } from "./math-raw/symbol";
 import { boldItalic } from "./space/bold-italic";
 import { cnCode } from "./space/cn-code";
@@ -40,6 +41,12 @@ const mathSymbolReplaceEntrySchema = z.object({
   to: z
     .string()
     .refine((s) => /^\\[a-zA-Z]+$/.test(s) || /^[^a-zA-Z0-9]$/.test(s)),
+}) satisfies z.ZodType<MapEntry>;
+
+const mathFuncReplaceEntrySchema = z.object({
+  enabled: z.boolean().default(true),
+  from: z.string().refine((s) => /^[a-zA-Z]+$/.test(s)),
+  to: z.string().refine((s) => /^\\[a-zA-Z\\{\\}]+$/.test(s)),
 }) satisfies z.ZodType<MapEntry>;
 
 export const FormatOptionsSchema = z.object({
@@ -72,6 +79,15 @@ export const FormatOptionsSchema = z.object({
     { enabled: true, from: "=>", to: "\\implies" },
     { enabled: true, from: "<=>", to: "\\iff" },
   ]),
+  mathFuncReplace: z.boolean().default(true),
+  mathFuncReplaceMap: z.array(mathFuncReplaceEntrySchema).default([
+    { enabled: true, from: "min", to: "\\min" },
+    { enabled: true, from: "max", to: "\\max" },
+    { enabled: true, from: "mex", to: "\\operatorname{mex}" },
+    { enabled: true, from: "gcd", to: "\\gcd" },
+    { enabled: true, from: "lcm", to: "\\operatorname{lcm}" },
+    { enabled: true, from: "log", to: "\\log" },
+  ]),
   clangFormat: z.boolean().default(false),
   remarkFormat: z.boolean().default(false),
   ruffFormat: z.boolean().default(false),
@@ -95,6 +111,8 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
           cnPunctuation(tree, options.enPunctuationReplaceMap);
         if (options.mathSymbolReplace)
           symbolReplace(tree, options.mathSymbolReplaceMap);
+        if (options.mathFuncReplace)
+          funcReplace(tree, options.mathFuncReplaceMap);
         if (options.cnEnSpace) cnEn(tree);
         if (options.cnCodeSpace) cnCode(tree);
         if (options.cnMathSpace) cnMath(tree);
