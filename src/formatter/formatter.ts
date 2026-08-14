@@ -35,7 +35,7 @@ const enPunctuationReplaceEntrySchema = z.object({
 
 const mathSymbolReplaceEntrySchema = z.object({
   enabled: z.boolean().default(true),
-  from: z.string().refine((s) => s.length > 0 && !/[a-zA-Z]+/.test(s)),
+  from: z.string().refine((s) => s.length > 0 && !/[a-zA-Z0-9]+/.test(s)),
   to: z
     .string()
     .refine((s) => /^\\[a-zA-Z]+$/.test(s) || /^[^a-zA-Z]$/.test(s)),
