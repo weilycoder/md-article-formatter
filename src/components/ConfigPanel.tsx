@@ -305,7 +305,7 @@ export const ConfigPanel = ({ options, onChange, extra }: ConfigPanelProps) => {
           danger
           onClick={() => {
             onChange(defaultFormatOptions);
-            window.location.reload();
+            // window.location.reload();
           }}
         >
           重置为默认配置

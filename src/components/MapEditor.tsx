@@ -15,13 +15,13 @@ interface MapEditorProps {
 function toRecord(
   rows: MapEntry[],
   rowValidator?: (from: string, to: string) => boolean,
-): MapEntry[] {
+): MapEntry[] | undefined {
   const visited = new Set<string>();
   const record: MapEntry[] = [];
   for (const { from, enabled, to } of rows) {
-    if (from === "" && to === "") continue;
-    if (visited.has(from)) continue;
-    if (rowValidator !== undefined && !rowValidator(from, to)) continue;
+    if (from === "" && to === "") return undefined;
+    if (visited.has(from)) return undefined;
+    if (rowValidator !== undefined && !rowValidator(from, to)) return undefined;
     visited.add(from);
     record.push({ enabled, from, to });
   }
@@ -40,21 +40,13 @@ export function MapEditor({
   if (rowValidator === undefined) rowValidator = () => true;
 
   useEffect(() => {
-    setRows((prev) => {
-      const committed = value;
-      const pending = prev.filter((row) => {
-        return !committed.some(
-          (c) =>
-            c.from === row.from && c.to === row.to && c.enabled === row.enabled,
-        );
-      });
-      return [...committed, ...pending];
-    });
+    setRows(value);
   }, [value]);
 
   const commit = (nextRows: MapEntry[]) => {
     setRows(nextRows);
-    onChange(toRecord(nextRows, rowValidator));
+    const record = toRecord(nextRows, rowValidator);
+    if (record !== undefined) onChange(record);
   };
 
   const updateFrom = (index: number, from: string) => {
