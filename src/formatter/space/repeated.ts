@@ -5,7 +5,8 @@ function removeRepeatedSpaces(line: string): string {
   let result = "";
   for (let i = 0; i < line.length; i++)
     if (
-      (result.length === 0 && result[result.length - 1] !== line[i]) ||
+      result.length === 0 ||
+      result.at(-1)! !== line[i] ||
       !/[\p{White_Space}\p{Cf}]/u.test(line[i])
     )
       result += line[i];

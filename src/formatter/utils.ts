@@ -72,7 +72,7 @@ export function getLastString(node: any): string | undefined {
   if (typeof value === "string" && value.length > 0) return value;
   const children = node?.children;
   if (Array.isArray(children) && children.length > 0)
-    return getLastString(children[children.length - 1]);
+    return getLastString(children.at(-1)!);
   return undefined;
 }
 
@@ -100,7 +100,7 @@ export function setLastString(node: any, newValue: string): boolean {
   }
   const children = node?.children;
   if (Array.isArray(children) && children.length > 0)
-    return setLastString(children[children.length - 1], newValue);
+    return setLastString(children.at(-1)!, newValue);
   return false;
 }
 
@@ -119,11 +119,10 @@ export function getFirstChar(node: any): string | undefined {
 export function getLastChar(node: any): string | undefined {
   if (node === undefined) return undefined;
   const value = node?.value;
-  if (typeof value === "string" && value.length > 0)
-    return value[value.length - 1];
+  if (typeof value === "string" && value.length > 0) return value.at(-1)!;
   const children = node?.children;
   if (Array.isArray(children) && children.length > 0)
-    return getLastChar(children[children.length - 1]);
+    return getLastChar(children.at(-1)!);
   return undefined;
 }
 
@@ -151,6 +150,6 @@ export function setLastChar(node: any, newChar: string): boolean {
   }
   const children = node?.children;
   if (Array.isArray(children) && children.length > 0)
-    return setLastChar(children[children.length - 1], newChar);
+    return setLastChar(children.at(-1)!, newChar);
   return false;
 }

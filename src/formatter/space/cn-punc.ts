@@ -19,7 +19,7 @@ function removeExtraSpaces(line: string): string {
     } else if (
       ch !== " " ||
       result.length === 0 ||
-      !isCJKPunctuation(result[result.length - 1])
+      !isCJKPunctuation(result.at(-1)!)
     )
       result += ch;
   }

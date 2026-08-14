@@ -19,8 +19,7 @@ function replacePunctuation(
     const ch = text[i];
     const entry = replaceMap[ch];
     if (!entry) result += ch;
-    else if (result.length > 0 && isCJK(result[result.length - 1]))
-      result += entry;
+    else if (result.length > 0 && isCJK(result.at(-1)!)) result += entry;
     else if (i + 1 < text.length && isCJK(text[i + 1])) result += entry;
     else result += ch;
   }
