@@ -34,9 +34,7 @@ type BooleanOptionKey = {
 }[keyof FormatOptions];
 
 type MapOptionKey = {
-  [K in keyof FormatOptions]: FormatOptions[K] extends Record<string, MapEntry>
-    ? K
-    : never;
+  [K in keyof FormatOptions]: FormatOptions[K] extends MapEntry[] ? K : never;
 }[keyof FormatOptions];
 
 type ConfigItem =
@@ -228,7 +226,7 @@ function MapItem({ item, options, onChange }: MapItemProps) {
   const rowValidator = (from: string, to: string) =>
     // oxlint-disable-next-line typescript/no-explicit-any
     FormatOptionsSchema.pick({ [item.key]: true } as any).safeParse({
-      [item.key]: { [from]: { enabled: true, to } },
+      [item.key]: [{ enabled: true, from, to }],
     }).success;
 
   return (

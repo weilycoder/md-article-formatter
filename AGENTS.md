@@ -18,7 +18,7 @@ md-article-formatter：浏览器端 Markdown 格式化工具（中文排版规�
 
 | 路径 | 职责 |
 |---|---|
-| `src/formatter/formatter.ts` | unified + remark 管线入口；用 zod 定义 `FormatOptionsSchema`/`MapEntrySchema` 并派生 `FormatOptions`、`MapEntry` 类型；`defaultFormatOptions` 由 `FormatOptionsSchema.parse({})` 生成 |
+| `src/formatter/formatter.ts` | unified + remark 管线入口；用 zod 定义 `FormatOptionsSchema`/`MapEntrySchema` 并派生 `FormatOptions`、`MapEntry` 类型（`MapEntry = { enabled, from, to }`）；`defaultFormatOptions` 由 `FormatOptionsSchema.parse({})` 生成 |
 | `src/formatter/en-punctuation.ts` | 中英文标点替换规则（文本内 + 跨节点边界） |
 | `src/formatter/code/clang-fmt.ts` | Clang Format 模块：模块加载时启动 WASM 初始化，导出共享 `clangFormatPromise`（供面板 `readiness` 复用，避免重复初始化）+ `clangFormatCode`/`clangFormat`（遍历 `code` 节点，未就绪时原样返回） |
 | `src/formatter/space/` | 空格类规则：`cn-en.ts`、`cn-code.ts`、`cn-math.ts`、`cn-punc.ts`、`bold-italic.ts`；`utils.ts` 提供跨节点插入工具（`insertBefore`/`insertAfter`） |
@@ -33,7 +33,7 @@ md-article-formatter：浏览器端 Markdown 格式化工具（中文排版规�
 
 ## 约定
 
-- **新增格式化规则**：在 `FormatOptions` 加字段。若为替换映射 → 用 `MapEntry { enabled, to }` 结构 + 配套总开关（如 `enPunctuationReplace` 与 `enPunctuationReplaceMap`）；然后在 `ConfigPanel.tsx` 的 `configGroups` 加一条描述即可，面板渲染零改动。
+- **新增格式化规则**：在 `FormatOptions` 加字段。若为替换映射 → 用 `MapEntry[]` 数组结构（每条 `{ enabled, from, to }`，而非对象键值映射）+ 配套总开关（如 `enPunctuationReplace` 与 `enPunctuationReplaceMap`）；然后在 `ConfigPanel.tsx` 的 `configGroups` 加一条描述即可，面板渲染零改动。`MapEditor` 提交时按 `from` 去重（首个生效）。
 - **新增代码格式化器**：在 `src/formatter/code/xxx.ts` 导出遍历 `code` 节点的格式化函数（如 `clangFormat(tree)`），在 `formatter.ts` 的 transformer 中按 `FormatOptions` 开关键调用；同时导出共享的就绪 Promise（如 `clangFormatPromise`）。然后在 `configGroups` 加一条 `switch` 项，带 `readiness`（该 Promise）与 `pendingTitle`/`errorTitle`，面板禁用逻辑零改动。
 - **规则执行顺序**（`formatter.ts` transformer 内）：`cnPunctuation` → `cnEn` → `cnCode` → `cnMath` → `cnPunc` → `boldItalic` → `clangFormat`；标点替换须在空格类规则之前。
 - **格式化收敛**：`formatMarkdown(input, options, maxIterations = 8)` 循环执行管线直到输出稳定；新增规则须保证幂等（再次执行不再改变结果）。

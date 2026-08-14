@@ -19,6 +19,7 @@ import { cnPunc } from "./space/cn-punc";
 
 export const MapEntrySchema = z.object({
   enabled: z.boolean(),
+  from: z.string(),
   to: z.string(),
 });
 
@@ -26,11 +27,13 @@ export type MapEntry = z.infer<typeof MapEntrySchema>;
 
 const enPunctuationReplaceEntrySchema = z.object({
   enabled: z.boolean().default(true),
+  from: z.string().length(1),
   to: z.string().length(1),
 }) satisfies z.ZodType<MapEntry>;
 
 const mathSymbolReplaceEntrySchema = z.object({
   enabled: z.boolean().default(true),
+  from: z.string().refine((s) => s.length > 0 && !/[a-zA-Z]+/.test(s)),
   to: z
     .string()
     .refine((s) => /^\\[a-zA-Z]+$/.test(s) || /^[^a-zA-Z]$/.test(s)),
@@ -43,35 +46,28 @@ export const FormatOptionsSchema = z.object({
   cnPuncSpace: z.boolean().default(true),
   boldItalicSpace: z.boolean().default(true),
   enPunctuationReplace: z.boolean().default(true),
-  enPunctuationReplaceMap: z
-    .record(z.string().length(1), enPunctuationReplaceEntrySchema)
-    .default({
-      ",": { enabled: true, to: "，" },
-      ".": { enabled: true, to: "。" },
-      "?": { enabled: true, to: "？" },
-      "!": { enabled: true, to: "！" },
-      ":": { enabled: true, to: "：" },
-      ";": { enabled: true, to: "；" },
-      "(": { enabled: true, to: "（" },
-      ")": { enabled: true, to: "）" },
-    }),
+  enPunctuationReplaceMap: z.array(enPunctuationReplaceEntrySchema).default([
+    { enabled: true, from: ",", to: "，" },
+    { enabled: true, from: ".", to: "。" },
+    { enabled: true, from: "?", to: "？" },
+    { enabled: true, from: "!", to: "！" },
+    { enabled: true, from: ":", to: "：" },
+    { enabled: true, from: ";", to: "；" },
+    { enabled: true, from: "(", to: "（" },
+    { enabled: true, from: ")", to: "）" },
+  ]),
   mathSymbolReplace: z.boolean().default(true),
-  mathSymbolReplaceMap: z
-    .record(
-      z.string().refine((s) => s.length > 0 && !/[a-zA-Z]+/.test(s)),
-      mathSymbolReplaceEntrySchema,
-    )
-    .default({
-      "*": { enabled: true, to: "\\times" },
-      "<=": { enabled: true, to: "\\leq" },
-      ">=": { enabled: true, to: "\\geq" },
-      "!=": { enabled: true, to: "\\neq" },
-      "==": { enabled: true, to: "=" },
-      "->": { enabled: true, to: "\\to" },
-      "<-": { enabled: true, to: "\\gets" },
-      "=>": { enabled: true, to: "\\implies" },
-      "<=>": { enabled: true, to: "\\iff" },
-    }),
+  mathSymbolReplaceMap: z.array(mathSymbolReplaceEntrySchema).default([
+    { enabled: true, from: "*", to: "\\times" },
+    { enabled: true, from: "<=", to: "\\leq" },
+    { enabled: true, from: ">=", to: "\\geq" },
+    { enabled: true, from: "!=", to: "\\neq" },
+    { enabled: true, from: "==", to: "=" },
+    { enabled: true, from: "->", to: "\\to" },
+    { enabled: true, from: "<-", to: "\\gets" },
+    { enabled: true, from: "=>", to: "\\implies" },
+    { enabled: true, from: "<=>", to: "\\iff" },
+  ]),
   clangFormat: z.boolean().default(false),
   remarkFormat: z.boolean().default(false),
   ruffFormat: z.boolean().default(false),

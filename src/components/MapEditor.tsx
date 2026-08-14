@@ -4,38 +4,26 @@ import { useEffect, useState } from "react";
 
 import type { MapEntry } from "../formatter/formatter";
 
-interface MapRow {
-  from: string;
-  enabled: boolean;
-  to: string;
-}
-
 interface MapEditorProps {
   fromLabel: string;
   toLabel: string;
-  value: Record<string, MapEntry>;
-  onChange: (value: Record<string, MapEntry>) => void;
+  value: MapEntry[];
+  onChange: (value: MapEntry[]) => void;
   rowValidator?: (from: string, to: string) => boolean;
 }
 
-function toRows(value: Record<string, MapEntry>): MapRow[] {
-  return Object.entries(value).map(([from, entry]) => ({
-    from,
-    enabled: entry.enabled,
-    to: entry.to,
-  }));
-}
-
 function toRecord(
-  rows: MapRow[],
+  rows: MapEntry[],
   rowValidator?: (from: string, to: string) => boolean,
-): Record<string, MapEntry> {
-  const record: Record<string, MapEntry> = {};
+): MapEntry[] {
+  const visited = new Set<string>();
+  const record: MapEntry[] = [];
   for (const { from, enabled, to } of rows) {
     if (from === "" && to === "") continue;
-    if (from in record) continue;
+    if (visited.has(from)) continue;
     if (rowValidator !== undefined && !rowValidator(from, to)) continue;
-    record[from] = { enabled, to };
+    visited.add(from);
+    record.push({ enabled, from, to });
   }
   return record;
 }
@@ -47,13 +35,13 @@ export function MapEditor({
   onChange,
   rowValidator,
 }: MapEditorProps) {
-  const [rows, setRows] = useState<MapRow[]>(() => toRows(value));
+  const [rows, setRows] = useState<MapEntry[]>(() => value);
 
   if (rowValidator === undefined) rowValidator = () => true;
 
   useEffect(() => {
     setRows((prev) => {
-      const committed = toRows(value);
+      const committed = value;
       const pending = prev.filter((row) => {
         return !committed.some(
           (c) =>
@@ -64,7 +52,7 @@ export function MapEditor({
     });
   }, [value]);
 
-  const commit = (nextRows: MapRow[]) => {
+  const commit = (nextRows: MapEntry[]) => {
     setRows(nextRows);
     onChange(toRecord(nextRows, rowValidator));
   };
