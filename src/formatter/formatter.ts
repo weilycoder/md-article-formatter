@@ -38,7 +38,7 @@ const mathSymbolReplaceEntrySchema = z.object({
   from: z.string().refine((s) => s.length > 0 && !/[a-zA-Z0-9]+/.test(s)),
   to: z
     .string()
-    .refine((s) => /^\\[a-zA-Z]+$/.test(s) || /^[^a-zA-Z]$/.test(s)),
+    .refine((s) => /^\\[a-zA-Z]+$/.test(s) || /^[^a-zA-Z0-9]$/.test(s)),
 }) satisfies z.ZodType<MapEntry>;
 
 export const FormatOptionsSchema = z.object({
