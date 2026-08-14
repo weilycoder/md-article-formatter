@@ -1,9 +1,11 @@
+import { processLatexViaUnified } from "@unified-latex/unified-latex";
 import type { Root } from "mdast";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
+import { visit } from "unist-util-visit";
 import { z } from "zod";
 
 import { clangFormat } from "./code/clang-fmt";
@@ -99,6 +101,12 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
         if (options.clangFormat) clangFormat(tree);
         if (options.remarkFormat) remarkFormat(tree);
         if (options.ruffFormat) ruffFormat(tree);
+        visit(tree, (node) => {
+          if (node.type === "inlineMath" || node.type === "math") {
+            const ast = processLatexViaUnified().processSync(node.value);
+            node.value = ast.toString();
+          }
+        });
       };
     })
     .use(remarkStringify, {
