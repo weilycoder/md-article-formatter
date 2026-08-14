@@ -98,6 +98,12 @@ const configGroups: ConfigGroup[] = [
         label: "加粗/斜体空格",
         description: "加粗/斜体文本前后自动移出多余空格",
       },
+      {
+        kind: "switch",
+        key: "repeatedSpace",
+        label: "重复空格",
+        description: "移除文本中重复的空格",
+      },
     ],
   },
   {

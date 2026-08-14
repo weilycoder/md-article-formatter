@@ -18,6 +18,7 @@ import { cnCode } from "./space/cn-code";
 import { cnEn } from "./space/cn-en";
 import { cnMath } from "./space/cn-math";
 import { cnPunc } from "./space/cn-punc";
+import { repeatedSpace } from "./space/repeated";
 
 export const MapEntrySchema = z.object({
   enabled: z.boolean(),
@@ -47,6 +48,7 @@ export const FormatOptionsSchema = z.object({
   cnCodeSpace: z.boolean().default(true),
   cnPuncSpace: z.boolean().default(true),
   boldItalicSpace: z.boolean().default(true),
+  repeatedSpace: z.boolean().default(true),
   enPunctuationReplace: z.boolean().default(true),
   enPunctuationReplaceMap: z.array(enPunctuationReplaceEntrySchema).default([
     { enabled: true, from: ",", to: "，" },
@@ -98,6 +100,7 @@ function _formatMarkdown(input: string, options: FormatOptions): string {
         if (options.cnMathSpace) cnMath(tree);
         if (options.cnPuncSpace) cnPunc(tree);
         if (options.boldItalicSpace) boldItalic(tree);
+        if (options.repeatedSpace) repeatedSpace(tree);
         if (options.clangFormat) clangFormat(tree);
         if (options.remarkFormat) remarkFormat(tree);
         if (options.ruffFormat) ruffFormat(tree);
