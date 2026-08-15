@@ -1,4 +1,5 @@
 import init, { format } from "@wasm-fmt/clang-format/vite";
+import type { MessageInstance } from "antd/lib/message/interface";
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 
@@ -17,9 +18,10 @@ clangFormatPromise
     console.error("Failed to initialize Clang Format WASM:", err);
   });
 
-export function clangFormat(tree: Root) {
+export function clangFormat(tree: Root, message?: MessageInstance) {
   if (!ready) {
     console.warn("Clang Format is not ready. Returning original code.");
+    message?.error("Clang Format is not ready.");
     return;
   }
   visit(tree, "code", (node) => {
@@ -32,6 +34,7 @@ export function clangFormat(tree: Root) {
       node.value = format(node.value, filename);
     } catch (e) {
       console.error("Clang Format Error:", e);
+      message?.warning(`Clang Format 格式化 ${node.lang} 代码块失败`);
     }
   });
 }

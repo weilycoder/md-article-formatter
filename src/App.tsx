@@ -45,7 +45,7 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
   );
 
   const { inputText, setInputText, options, setOptions, formattedText } =
-    useMarkdownFormatter();
+    useMarkdownFormatter(message);
   const { handleCopy, handleDownload, handleUpload } = useEditorActions({
     formattedText,
     onUploadText: setInputText,

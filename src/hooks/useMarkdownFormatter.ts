@@ -1,3 +1,4 @@
+import type { MessageInstance } from "antd/lib/message/interface";
 import { useEffect, useMemo, useState } from "react";
 
 import initialText from "../demo.md?raw";
@@ -20,7 +21,7 @@ function getInitialFormatOptions(): FormatOptions {
   return defaultFormatOptions;
 }
 
-export function useMarkdownFormatter() {
+export function useMarkdownFormatter(message?: MessageInstance) {
   const [inputText, setInputText] = useState<string>(initialText);
   const [options, setOptions] = useState<FormatOptions>(
     getInitialFormatOptions(),
@@ -31,8 +32,8 @@ export function useMarkdownFormatter() {
   }, [options]);
 
   const formattedText = useMemo(
-    () => formatMarkdown(inputText, options),
-    [inputText, options],
+    () => formatMarkdown(inputText, options, message),
+    [inputText, options, message],
   );
 
   return {
