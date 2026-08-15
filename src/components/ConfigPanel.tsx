@@ -1,4 +1,5 @@
 import {
+  App as AntApp,
   Button,
   Card,
   Col,
@@ -10,7 +11,7 @@ import {
   theme,
   type CardProps,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { clangFormatPromise } from "../formatter/code/clang-fmt";
 import { ruffPromise } from "../formatter/code/ruff-py";
@@ -21,6 +22,7 @@ import {
   type MapEntry,
 } from "../formatter/formatter";
 import { useAsyncReadyStatus } from "../hooks/useAsyncReadyStatus";
+import { useConfigActions } from "../hooks/useConfigActions";
 import { MapEditor } from "./MapEditor";
 
 interface ConfigPanelProps {
@@ -273,6 +275,14 @@ function MapItem({ item, options, onChange }: MapItemProps) {
 
 export const ConfigPanel = ({ options, onChange, extra }: ConfigPanelProps) => {
   const { token } = theme.useToken();
+  const { message } = AntApp.useApp();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { handleExportConfig, handleImportConfig } = useConfigActions({
+    options,
+    onImport: onChange,
+    message,
+  });
 
   return (
     <Card
@@ -317,15 +327,45 @@ export const ConfigPanel = ({ options, onChange, extra }: ConfigPanelProps) => {
             <Divider style={{ margin: "16px 0 0" }} />
           </section>
         ))}
-        <Button
-          danger
-          onClick={() => {
-            onChange(defaultFormatOptions);
-            // window.location.reload();
-          }}
-        >
-          重置为默认配置
-        </Button>
+        <Flex gap={16} justify="space-evenly">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            style={{ display: "none" }}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) handleImportConfig(file);
+              event.target.value = "";
+            }}
+          />
+          <Button
+            color="primary"
+            variant="dashed"
+            style={{ flex: 1 }}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            导入配置
+          </Button>
+          <Button
+            color="primary"
+            variant="outlined"
+            style={{ flex: 1 }}
+            onClick={handleExportConfig}
+          >
+            导出配置
+          </Button>
+          <Button
+            color="danger"
+            variant="outlined"
+            style={{ flex: 1 }}
+            onClick={() => {
+              onChange(defaultFormatOptions);
+            }}
+          >
+            重置为默认配置
+          </Button>
+        </Flex>
       </Flex>
     </Card>
   );
