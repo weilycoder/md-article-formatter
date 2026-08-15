@@ -19,6 +19,7 @@ import {
 import zhCN from "antd/locale/zh_CN";
 import { useState, type CSSProperties } from "react";
 
+import { AppFooter } from "./components/AppFooter";
 import { AppHeader } from "./components/AppHeader";
 import { ConfigPanel } from "./components/ConfigPanel";
 import { EditorPanel } from "./components/EditorPanel";
@@ -76,7 +77,7 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
         style={{
           flex: 1,
           minHeight: 0,
-          padding: 16,
+          padding: 8,
           overflow: "hidden",
           display: viewMode === "edit" ? undefined : "none",
         }}
@@ -145,7 +146,7 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
         style={{
           flex: 1,
           minHeight: 0,
-          padding: 16,
+          padding: 8,
           overflow: "hidden",
           display: viewMode === "diff" ? undefined : "none",
         }}
@@ -168,6 +169,8 @@ function AppInner({ isDark, onToggleTheme }: AppInnerProps) {
           extra={<Button onClick={() => setViewMode("edit")}>返回编辑</Button>}
         />
       </div>
+
+      <AppFooter />
     </Flex>
   );
 }

@@ -279,7 +279,8 @@ export const ConfigPanel = ({ options, onChange, extra }: ConfigPanelProps) => {
       title="配置"
       style={{
         flexShrink: 0,
-        padding: 16,
+        padding: 8,
+        borderRadius: "0px",
         background: token.colorBgContainer,
         borderTop: `1px solid ${token.colorBorderSecondary}`,
       }}
