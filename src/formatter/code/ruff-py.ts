@@ -29,7 +29,7 @@ ruffPromise
 export function ruffFormat(tree: Root, message?: MessageInstance) {
   if (workspace === null) {
     console.warn("Ruff is not ready. Returning original code.");
-    message?.error("Ruff is not ready.");
+    // message?.error("Ruff is not ready.");
     return;
   }
   visit(tree, "code", (node) => {

@@ -21,7 +21,7 @@ clangFormatPromise
 export function clangFormat(tree: Root, message?: MessageInstance) {
   if (!ready) {
     console.warn("Clang Format is not ready. Returning original code.");
-    message?.error("Clang Format is not ready.");
+    // message?.error("Clang Format is not ready.");
     return;
   }
   visit(tree, "code", (node) => {
